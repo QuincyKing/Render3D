@@ -3,7 +3,7 @@
 
 [![Author](https://img.shields.io/badge/Author-QuincyKing-brightgreen.svg)](https://github.com/QuincyKing)
 [![Version](https://img.shields.io/badge/Version-0.0.1-blue.svg)]()
-[![License](https://img.shields.io/badge/License-BSD-red.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](./LICENSE)
 
 ### Feature
 + 数学库：向量、矩阵；
