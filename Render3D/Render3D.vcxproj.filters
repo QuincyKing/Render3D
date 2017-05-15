@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="render\Primitive.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Transform.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Raster.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="window\Window.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="render\Primitive.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Transform.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Raster.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="math\MathUtil.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="window\Window.h">
+      <Filter>window</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{65799ea8-e621-4ac0-b423-be757a90c980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{307aef44-6d37-4735-998c-41b886acef70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window">
+      <UniqueIdentifier>{c21315af-af78-40d5-adc4-1cc92a819fdf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
