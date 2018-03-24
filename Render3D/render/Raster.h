@@ -63,5 +63,10 @@ namespace Render3D
 		int m_render_state;				// äÖÈ¾×´Ì¬
 		uint32_t m_background;			// ±³¾°ÑÕÉ«
 		uint32_t m_foreground;			// Ïß¿òÑÕÉ«
+
+		bool m_blend;
+		float m_blend_sfactor;
+		float m_blend_dfactor;
+		int m_cull;
 	};
 }

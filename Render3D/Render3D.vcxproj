@@ -41,7 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\Render3D\external\sdl2\prebuild\windows;..\Render3D\external\libpng\prebuild\windows;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\Render3D\external\sdl2\prebuild\windows;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Render3D\external\libpng\include;..\Render3D\external\sdl2\include;..\Render3D\external\tinyobj;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -58,7 +59,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libpng16.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,12 +81,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="render\Raster.cpp" />
     <ClCompile Include="render\Primitive.cpp" />
     <ClCompile Include="render\Transform.cpp" />
+    <ClCompile Include="utils\Utils.cpp" />
     <ClCompile Include="window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Color.h" />
     <ClInclude Include="external\libpng\include\crc32.h" />
     <ClInclude Include="external\libpng\include\deflate.h" />
     <ClInclude Include="external\libpng\include\gzguts.h" />
@@ -185,9 +189,12 @@
     <ClInclude Include="math\MathUtil.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
+    <ClInclude Include="render\Material.h" />
     <ClInclude Include="render\Raster.h" />
     <ClInclude Include="render\Primitive.h" />
+    <ClInclude Include="render\Texture.h" />
     <ClInclude Include="render\Transform.h" />
+    <ClInclude Include="utils\Utils.h" />
     <ClInclude Include="window\Window.h" />
   </ItemGroup>
   <ItemGroup>

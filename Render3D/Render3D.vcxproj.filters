@@ -13,6 +13,10 @@
     <ClCompile Include="window\Window.cpp">
       <Filter>window</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="utils\Utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render\Primitive.h">
@@ -324,6 +328,18 @@
     <ClInclude Include="external\sdl2\include\SDL_video.h">
       <Filter>external\sdl2\include</Filter>
     </ClInclude>
+    <ClInclude Include="utils\Utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Material.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Texture.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -379,6 +395,12 @@
     </Filter>
     <Filter Include="external\sdl2\prebuild\windows">
       <UniqueIdentifier>{5651a97c-32ac-493d-8722-c5a7ba4310b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{37c1840e-3bd6-47c7-bc74-a87457504c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{1d7a8c3e-c630-416f-885c-a80295b8b0a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

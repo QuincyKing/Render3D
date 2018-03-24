@@ -13,13 +13,14 @@
 #include "../math/Matrix.h"
 #include "../math/Vector.h"
 #include "../math/MathUtil.h"
+#include "../base/Color.h"
 
 using namespace Math3D;
+using namespace Base3D;
 
 namespace Render3D
 {
 	using Point = Vector4;
-	using Color = struct { float r, g, b; };
 	using Texcoord = struct { float u, v; };
 
 	struct Vertex

@@ -7,6 +7,12 @@
 #include "math/MathUtil.h"
 #include <stdio.h>
 
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2main.lib")
+#pragma comment(lib, "SDL2test.lib")
+#pragma comment(lib, "libpng16.lib")
+#pragma comment(lib, "zlib.lib")
+
 Render3D::Vertex mesh[8] =
 {
 	{ { 1, -1, 1, 1 }, { 0, 0 }, { 1.0f, 0.2f, 0.2f }, 1 },
