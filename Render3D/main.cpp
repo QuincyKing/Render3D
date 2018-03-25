@@ -3,15 +3,27 @@
 #include "render/Raster.h"
 #include "render/Primitive.h"
 #include "math/Matrix.h"
-#include "math//Vector.h"
+#include "math/Vector.h"
 #include "math/MathUtil.h"
+#include "base/Color.h"
+#include "base/Material.h"
+#include "base/Texture.h"
+#include "base\Light\PointLight.h"
+#include "base\Light\DirLight.h"
+#include "base\Camera.h"
 #include <stdio.h>
+#include <vector>
 
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
 #pragma comment(lib, "SDL2test.lib")
 #pragma comment(lib, "libpng16.lib")
 #pragma comment(lib, "zlib.lib")
+
+extern std::vector<Base3D::Material> materials;
+extern Base3D::DirLight dirLight;
+extern std::vector<Base3D::PointLight> pointLights;
+extern std::vector<Base3D::Camera> cameras;
 
 Render3D::Vertex mesh[8] =
 {

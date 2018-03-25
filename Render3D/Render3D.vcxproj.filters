@@ -20,6 +20,9 @@
     <ClCompile Include="base\Color.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="base\Camera.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render\Primitive.h">
@@ -334,23 +337,29 @@
     <ClInclude Include="utils\Utils.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="render\Material.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="render\Texture.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="base\Color.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="base\Light\DirLight.h">
       <Filter>base\Light</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
+    <ClInclude Include="base\Light\Light.h">
       <Filter>base\Light</Filter>
     </ClInclude>
-    <ClInclude Include="DirLight.h">
+    <ClInclude Include="base\Light\PointLight.h">
       <Filter>base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Material.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Texture.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Camera.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\texcoord.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

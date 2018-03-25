@@ -69,14 +69,4 @@ namespace Base3D
 
 		return color;
 	}
-
-	void Color::Interpolating(Color &res, const Color &src1, const Color &src2, const Color &src3
-		, float a, float b, float c)
-	{
-		Color tmp;
-		tmp = src1 * a;
-		tmp += src2 * b;
-		tmp += src3 * c;
-		res = tmp;
-	}
 }

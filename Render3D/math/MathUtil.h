@@ -15,6 +15,32 @@
 
 namespace Math3D
 {
+	#define PI 3.1415926
+	#define angleToRadian(X) ((X)/180 * PI)
+	#define radianToAngle(X) ((X)/PI*180)
+
+	static int Clamp(int x, int min, int max)
+	{
+		return (x < min) ? min : ((x > max) ? max : x);
+	}
+
+	static float Interp(float x1, float x2, float t)
+	{
+		return x1 + (x2 - x1) * t;
+	}
+
+	static int LogBase2OfX(int n)
+	{
+		if (n <= 0) return 0;
+		int r = 0;
+		while (n != 0)
+		{
+			n = n >> 1;
+			r++;
+		}
+		return r - 1;
+	}
+
 	template<typename Real>
 	inline Vector<Real, 4> operator* (const Vector<Real, 4>& vec, const Matrix<Real>& _mat)
 	{
@@ -288,16 +314,6 @@ namespace Math3D
 			Real(0));
 	}
 
-	static int CMID(int x, int min, int max)
-	{
-		return (x < min) ? min : ((x > max) ? max : x);
-	}
-
-	static float Interp(float x1, float x2, float t)
-	{
-		return x1 + (x2 - x1) * t;
-	}
-
 	static void VectorInterp(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
 	{
 		z[0] = Interp(x1.X(), x2.X(), t);
@@ -376,6 +392,24 @@ namespace Math3D
 		m.M44 = 1.0f;
 	}
 
+	static void MatrixSetAxis(Matrix44 &m, const Vector4 &xaxis, const Vector4 &yaxis, const Vector4 &zaxis, const Vector4 &pos) 
+	{
+		m.M11 = xaxis.X();
+		m.M12 = xaxis.Y();
+		m.M13 = xaxis.Z();
+		m.M21 = yaxis.X();
+		m.M22 = yaxis.Y();
+		m.M23 = yaxis.Z();
+		m.M31 = zaxis.X();
+		m.M32 = zaxis.Y();
+		m.M33 = zaxis.Z();
+		m.M41 = pos.X();
+		m.M42 = pos.Y();
+		m.M43 = pos.Z();
+		m.M14 = m.M24 = m.M34 = 0.0f;
+		m.M44 = 1.0f;
+	}
+
 	static void MatrixSetPerspective(Matrix44 &m, float fovy, float aspect, float zn, float zf)
 	{
 		float fax = 1.0f / (float)tan(fovy * 0.5f);
@@ -385,5 +419,18 @@ namespace Math3D
 		m.M33 = zf / (zf - zn);
 		m.M43 = -zn * zf / (zf - zn);
 		m.M34 = 1;
+	}
+
+	static void MatrixSetOrtho(Matrix44 &m, float l, float r, float b, float t, float zn, float zf)
+	{
+		m.M11 = 2.0f / (r - l);
+		m.M22 = 2.0f / (t - b);
+		m.M33 = 1.0f / (zf - zn);
+		m.M41 = (l + r) / (l - r);
+		m.M42 = (t + b) / (b - t);
+		m.M43 = zn / (zn - zf);
+		m.M44 = 1.0f;
+		m.M12 = m.M13 = m.M14 = m.M21 = m.M23 = m.M24 = 0.0f;
+		m.M31 = m.M32 = m.M34 = 0.0f;
 	}
 }

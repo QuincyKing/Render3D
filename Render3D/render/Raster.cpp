@@ -137,8 +137,8 @@ namespace Render3D
 		v *= m_maxV;
 		int x = (int)(u + 0.5f);
 		int y = (int)(v + 0.5f);
-		CMID(x, 0, m_texWidth - 1);
-		CMID(y, 0, m_texHeight - 1);
+		Clamp(x, 0, m_texWidth - 1);
+		Clamp(y, 0, m_texHeight - 1);
 		return m_texture[x][y];
 	}
 
@@ -265,9 +265,9 @@ namespace Render3D
 						int R = (int)(r * 255.0f);
 						int G = (int)(g * 255.0f);
 						int B = (int)(b * 255.0f);
-						R = CMID(R, 0, 255);
-						G = CMID(G, 0, 255);
-						B = CMID(B, 0, 255);
+						R = Clamp(R, 0, 255);
+						G = Clamp(G, 0, 255);
+						B = Clamp(B, 0, 255);
 						framebuffer[x] = (R << 16) | (G << 8) | (B);
 					}
 					if (render_state & RENDER_STATE_TEXTURE)

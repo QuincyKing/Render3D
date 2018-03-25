@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="base\Camera.cpp" />
     <ClCompile Include="base\Color.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render\Raster.cpp" />
@@ -90,8 +91,14 @@
     <ClCompile Include="window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="base\Camera.h" />
     <ClInclude Include="base\Color.h" />
-    <ClInclude Include="DirLight.h" />
+    <ClInclude Include="base\Light\DirLight.h" />
+    <ClInclude Include="base\Light\Light.h" />
+    <ClInclude Include="base\Light\PointLight.h" />
+    <ClInclude Include="base\Material.h" />
+    <ClInclude Include="base\texcoord.h" />
+    <ClInclude Include="base\Texture.h" />
     <ClInclude Include="external\libpng\include\crc32.h" />
     <ClInclude Include="external\libpng\include\deflate.h" />
     <ClInclude Include="external\libpng\include\gzguts.h" />
@@ -188,15 +195,11 @@
     <ClInclude Include="external\sdl2\include\SDL_version.h" />
     <ClInclude Include="external\sdl2\include\SDL_video.h" />
     <ClInclude Include="external\tinyobj\tinyobj_loader_c.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="math\MathUtil.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="render\Material.h" />
     <ClInclude Include="render\Raster.h" />
     <ClInclude Include="render\Primitive.h" />
-    <ClInclude Include="render\Texture.h" />
     <ClInclude Include="render\Transform.h" />
     <ClInclude Include="utils\Utils.h" />
     <ClInclude Include="window\Window.h" />
