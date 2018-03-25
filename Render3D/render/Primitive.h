@@ -16,7 +16,6 @@
 #include "../base/Color.h"
 
 using namespace Math3D;
-using namespace Base3D;
 
 namespace Render3D
 {
@@ -27,7 +26,7 @@ namespace Render3D
 	{
 		Point pos;
 		Texcoord tc;
-		Color color;
+		Base3D::Color color;
 		float rhw;
 
 		void InitWithRhw();

@@ -17,6 +17,9 @@
     <ClCompile Include="utils\Utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="base\Color.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render\Primitive.h">
@@ -331,14 +334,23 @@
     <ClInclude Include="utils\Utils.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="render\Material.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="render\Texture.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Color.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirLight.h">
+      <Filter>base\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +413,9 @@
     </Filter>
     <Filter Include="base">
       <UniqueIdentifier>{1d7a8c3e-c630-416f-885c-a80295b8b0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\Light">
+      <UniqueIdentifier>{a101ab87-4bcc-4cdc-8aa1-a98c0f4873f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
