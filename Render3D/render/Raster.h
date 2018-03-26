@@ -15,6 +15,9 @@
 #include <string>
 #include "Transform.h"
 #include "Primitive.h"
+#include "../base/Camera.h"
+#include "../base/Material.h"
+
 
 #define RENDER_STATE_WIREFRAME      1		// 渲染线框
 #define RENDER_STATE_TEXTURE        2		// 渲染纹理
@@ -30,7 +33,7 @@ namespace Render3D
 	class Raster
 	{
 	public:
-		void Init(int width, int height, void *fb);
+		void Init(Raster _raster);
 		uint32_t ReadTexture(float u, float v);
 		void Destroy();
 		void SetTexture(void *bits, long pitch, int w, int h);
@@ -45,28 +48,24 @@ namespace Render3D
 		void SetTransformWorld(const Math3D::Matrix44 _world);
 		void SetTransformView(const Math3D::Matrix44 _view);
 		void SetTransformProjection(const Math3D::Matrix44 _projection);
-		void SetRenderState(int _render_state) { m_render_state = _render_state; }
+		void SetRenderState(int _render_state) { renderState = _render_state; }
 		void TransformUpdate();
 		uint32_t **m_framebuffer;		// 像素缓存：m_framebuffer[y] 代表第 y行
 
 	private:
-		Transform m_transform;			// 坐标变换器
-		int m_width;					// 窗口宽度
-		int m_height;					// 窗口高度
-		
-		float **m_zbuffer;				// 深度缓存：m_zbuffer[y] 为第 y行指针
-		uint32_t **m_texture;			// 纹理：同样是每行索引
-		int m_texWidth;					// 纹理宽度
-		int m_texHeight;				// 纹理高度
-		float m_maxU;					// 纹理最大宽度：m_texWidth - 1
-		float m_maxV;					// 纹理最大高度：m_texHeight - 1
-		int m_render_state;				// 渲染状态
-		uint32_t m_background;			// 背景颜色
-		uint32_t m_foreground;			// 线框颜色
+		Transform transform;			// 坐标变换器
+		int32_t *frameBuffer;             // 像素缓存
+		float *zBuffer;				    // 深度缓存
+		float *shadowBuffer;            // 阴影缓存
+		int renderState;				// 渲染状态
+		uint32_t background;			// 背景颜色
+		uint32_t foreground;			// 线框颜色
+		Base3D::Camera camera;
+		Base3D::Material material;
 
-		bool m_blend;
-		float m_blend_sfactor;
-		float m_blend_dfactor;
-		int m_cull;
+		bool blend;
+		float blendSrcFactor;
+		float blendDestFactor;
+		int cull;
 	};
 }

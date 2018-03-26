@@ -39,7 +39,6 @@ namespace Base3D
 			dest = dest + (tmp * b);
 			tmp = src3;
 			dest = dest + (tmp * c);
-
 		}
 	};
 }

@@ -1,58 +1,19 @@
 #include "Raster.h"
+#include "../math/Matrix.h"
 
 namespace Render3D
 {
-	/*!
-	* 函数全名 Render3D::Raster::Init
-	*
-	* @brief 设备初始化，fb为外部帧缓存，非 NULL 将引用外部帧缓存（每行 4字节对齐）
-	*
-	* @return void
-	*
-	* @param int width 屏幕宽度
-	* @param int height 屏幕高度
-	* @param void * fb 帧缓冲
-	*/
-	void Raster::Init(int width, int height, void *fb)
+	void Raster::Init(Raster _raster)
 	{
-		//1. framebuffer 为 height * sizeof(void *)
-		//2. zbuffer 为height * sizeof(void *)
-		//3. texture 为1024 * sizeof(void *)
-		//4. framebuf行 为 4 * width * height
-		//5. zbuf行 为4 * width * height
-		//6. texure 为64
-		m_width = width;
-		m_height = height;
-		m_texHeight = 2;
-		m_texWidth = 2;
-		m_maxU = m_texWidth - 1.0f;
-		m_maxV = m_texHeight - 1.0f;
-		m_render_state = RENDER_STATE_WIREFRAME;
-		m_background = 0x0c0c0c;
-		m_foreground = 0;
-		int need = 2 * height * sizeof(void *) + 1024 * sizeof(void *) + 8 * width * height + 64;
-		char *ptr = (char *)malloc(need);
-		assert(ptr);
-		m_framebuffer = (uint32_t **)ptr;
-		m_zbuffer = (float **)ptr + height * sizeof(void *);
-		m_texture = (uint32_t **)ptr + 2 * height *sizeof(void *);
-		ptr += 2 * height * sizeof(void *) + 1024 * sizeof(void *);
-		char *framebuf = (char *)ptr;
-		char *zbuf = (char *)ptr + width * height * 4;
-		ptr += 8 * width * height;
-		if (fb != NULL) 
-			framebuf = (char*)fb;
-		//动态申请framebuffer和zbuffer的二维数组
-		for (int j = 0; j < height; j++)
-		{
-			m_framebuffer[j] = (uint32_t *)(framebuf + j * width * 4);
-			m_zbuffer[j] = (float *)(zbuf + j * width * 4);
-		}
-		m_texture[0] = (uint32_t *)ptr;
-		m_texture[1] = (uint32_t *)(ptr + 64);
-		memset(m_texture[0], 0, 64);
-		//初始化几何矩阵
-		m_transform.Init(width, height);
+		renderState = RENDER_STATE_TEXTURE;
+		background = 0x0c0c0c;
+		foreground = 0;
+		
+		Matrix44 identity;
+		identity.MakeIdentity();
+		transform.SetProjection(identity);
+		transform.SetView(identity);
+		transform.SetWorld(identity);
 	}
 
 	/*!

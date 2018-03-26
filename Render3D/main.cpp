@@ -24,6 +24,7 @@ extern std::vector<Base3D::Material> materials;
 extern Base3D::DirLight dirLight;
 extern std::vector<Base3D::PointLight> pointLights;
 extern std::vector<Base3D::Camera> cameras;
+extern float *pShadowBuffer;
 
 Render3D::Vertex mesh[8] =
 {

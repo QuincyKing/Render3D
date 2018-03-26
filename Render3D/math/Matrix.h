@@ -34,6 +34,7 @@ namespace Math3D
 		void MakeIdentity();
 		void MakeZero();
 		inline const Real* operator() () const					{ return m_Elements; }
+		inline void operator =();
 		inline Real* operator() ()								{ return m_Elements; }
 		inline Real operator[] (int index) const				{ return m_Elements[index]; }
 		inline Real& operator[] (int index)						{ return m_Elements[index]; }
@@ -55,7 +56,7 @@ namespace Math3D
 		Matrix& operator-= (const Matrix& _rhs);
 		Matrix& operator*= (Real _scalar);
 		Matrix& operator/= (Real _scalar);
-		static const Matrix& Identity();
+		static Matrix& Identity();
 
 	public:
 		union
@@ -151,6 +152,15 @@ Vector<Real, 4> Matrix<Real>::GetColumn(int _iCol) const
 {
 	return Vector<Real, 4>(m_Elements[MatrixItem(0, _iCol)], m_Elements[MatrixItem(1, _iCol)],
 		m_Elements[MatrixItem(2, _iCol)], m_Elements[MatrixItem(3, _iCol)]);
+}
+
+template<typename Real>
+void Matrix<Real>::operator =(const Matrix<Real>& _rhs)
+{
+	M11 = _rhs.M11; M21 = _rhs.M21; M31 = _rhs.M31; M41 = _rhs.M41;
+	M12 = _rhs.M12; M22 = _rhs.M22; M32 = _rhs.M32; M42 = _rhs.M42;
+	M13 = _rhs.M13; M23 = _rhs.M23; M33 = _rhs.M33; M43 = _rhs.M43;
+	M14 = _rhs.M14; M24 = _rhs.M24; M34 = _rhs.M34; M44 = _rhs.M44;
 }
 
 template<typename Real>
@@ -264,7 +274,7 @@ Matrix<Real>& Matrix<Real>::operator/= (Real _scalar)
 }
 
 template<typename Real>
-const Matrix<Real>& Matrix<Real>::Identity()
+Matrix<Real>& Matrix<Real>::Identity()
 {
 	static Matrix<Real> out(
 		Real(1), Real(0), Real(0), Real(0),
