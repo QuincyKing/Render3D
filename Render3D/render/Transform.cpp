@@ -12,36 +12,9 @@ namespace Render3D
 	*/
 	void Transform::Update()
 	{
-		//若World，View, Projection矩阵变换后，进行变换矩阵的更新；
-		Math3D::Matrix44 m;
-		m = m_World * m_View;
-		m_Transform = m * m_Projection;
-	}
-
-	/*!
-	* @function Render3D::Transform::Init
-	*
-	* @brief 初始化
-	*
-	* @return void
-	*
-	* @param int _width
-	* @param int _height
-	*/
-	void Transform::Init(int _width, int _height)
-	{
-		//1.World矩阵Identity;
-		//2.View矩阵Indentity;
-		//3.根据屏幕的长宽比，以及默认视角为90度，近裁剪面为1.0f,远裁剪面为500.0f
-		//4.矩阵更新
-		float aspect = (float)_width / ((float)_height);
-
-		m_World.Identity();
-		m_View.Identity();
-		MatrixSetPerspective(m_Projection, 3.1415926f * 0.5f, aspect, 1.0f, 500.0f);
-		w = (float)_width;
-		h = (float)_height;
-		Update();
+		mv = model * view;
+		vp = view * projection;
+		mvp = mv * projection;
 	}
 
 	/*!
@@ -56,7 +29,7 @@ namespace Render3D
 	*/
 	void Transform::Apply(Math3D::Vector4 &y, const Math3D::Vector4 &x)
 	{
-		y = x * m_Transform;
+		y = x * mvp;
 	}
 
 	/*!
@@ -69,27 +42,40 @@ namespace Render3D
 	* @param Math3D::Vector4 & y
 	* @param const Math3D::Vector4 & x
 	*/
-	void Transform::Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x)
+	void Transform::Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, float width, float height)
 	{
 		float rhw = 1.0f / x.W();
-		y.X() = (x.X() * rhw + 1.0f) * w * 0.5f;
-		y.Y() = (1.0f - x.Y() * rhw) * h * 0.5f;
+		y.X() = (x.X() * rhw + 1.0f) * width * 0.5f;
+		y.Y() = (1.0f - x.Y() * rhw) * height * 0.5f;
 		y.Z() = x.Z() * rhw;
 		y.W() = 1.0f;
 	}
 
-	void Transform::SetWorld(const Math3D::Matrix44 &_matrix)
+	void Transform::HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, float width, float height)
 	{
-		m_World = _matrix;
+		y.X() = (x.X() * 2 / width - 1.0f) * w;
+		y.Y() = (1.0f - x.Y() * 2 / height) * w;
+		y.Z() = x.Z() * w;
+		y.W() = w;
+	}
+
+	void Transform::SetModel(const Math3D::Matrix44 &_matrix)
+	{
+		model = _matrix;
 	}
 
 	void Transform::SetView(const Math3D::Matrix44 &_matrix)
 	{
-		m_View = _matrix;
+		view = _matrix;
+	}
+
+	void Transform::SetViewR(const Math3D::Matrix44 &_matrix)
+	{
+		viewR = _matrix;
 	}
 
 	void Transform::SetProjection(const Math3D::Matrix44 &_matrix)
 	{
-		m_Projection = _matrix;
+		projection = _matrix;
 	}
 }

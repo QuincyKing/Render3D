@@ -18,7 +18,7 @@ namespace Math3D
 		typedef Real value_type;
 
 	public:
-		Vector() {}
+		Vector() { for (int i = 0; i < size; i++) m_Tuple[i] = Real(0); }
 		Vector(Real _realX, Real _realY);
 		Vector(Real _realX, Real _realY, Real _realZ);
 		Vector(Real _realX, Real _realY, Real _realZ, Real _realW);

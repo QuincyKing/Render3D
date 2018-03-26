@@ -11,6 +11,8 @@
 #include "base\Light\PointLight.h"
 #include "base\Light\DirLight.h"
 #include "base\Camera.h"
+#include "base\Object.h"
+#include "base\Texture.h"
 #include <stdio.h>
 #include <vector>
 
@@ -24,6 +26,8 @@ extern std::vector<Base3D::Material> materials;
 extern Base3D::DirLight dirLight;
 extern std::vector<Base3D::PointLight> pointLights;
 extern std::vector<Base3D::Camera> cameras;
+extern std::vector<Base3D::Object> objs;
+extern std::vector<Base3D::Texture> textures;
 extern float *pShadowBuffer;
 
 Render3D::Vertex mesh[8] =
