@@ -13,10 +13,17 @@
 #include <cstdlib>
 #include <cassert>
 #include <string>
+#include <vector>
 #include "Transform.h"
 #include "Primitive.h"
 #include "../base/Camera.h"
 #include "../base/Material.h"
+#include "../math/Vector.h"
+#include "../base/Shader.h"
+#include "../base/Material.h"
+#include "../base/Light/DirLight.h"
+#include "../base/Texture.h"
+#include "Transform.h"
 #include "Primitive.h"
 
 
@@ -47,7 +54,9 @@ namespace Render3D
 		void DrawPixel(int x, int y, uint32_t color);
 		void DrawLine(int x1, int y1, int x2, int y2, uint32_t c);
 		void ClipPolys(Vertex &v1, Vertex &v2, Vertex &v3, bool world);
-		void DrawScanline(Scanline &scanline, Point &points, v2f *vfs);
+		void VertShader(Base3D::a2v &av, Base3D::v2f &vf);
+		void FragShader(Base3D::v2f &vf, Base3D::Color &color);
+		void DrawScanline(Scanline &scanline, Point &points, Base3D::v2f *vfs);
 		void SetRenderState(int _render_state) { renderState = _render_state; }
 		uint32_t **m_framebuffer;		// 像素缓存：m_framebuffer[y] 代表第 y行
 

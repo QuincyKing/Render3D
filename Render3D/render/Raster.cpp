@@ -158,35 +158,169 @@ namespace Render3D
 		}
 	}
 
-	void Raster::DrawScanline(Scanline *scanline, Point *points, v2f *vfs) 
+	void Raster::VertShader(Base3D::a2v &av, Base3D::v2f &vf)
+	{
+		vf.pos = av.pos;
+		vf.normal = av.normal;
+		vf.color = av.color;
+		vf.texcoord = av.texcoord;
+
+		vf.storage0 = { av.tangent.X(), av.binormal.X(), av.normal.X() };
+		vf.storage1 = { av.tangent.Y(), av.binormal.Y(), av.normal.Y() };
+		vf.storage2 = { av.tangent.Z(), av.binormal.Z(), av.normal.Z() };
+	}
+
+	Base3D::DirLight dirLight;
+	std::vector<Base3D::Texture> textures;
+	std::vector<Base3D::Camera> cameras;
+	float *pShadowBuffer;
+
+	void Raster::FragShader(Base3D::v2f &vf, Base3D::Color &color)
+	{
+		Base3D::Material material = this->material;
+		Math3D::Vector4 viewdir, viewPos = camera.position;
+		viewdir = viewPos - vf.pos;
+		Normalize(viewdir);
+		Base3D::Texcoord tex = vf.texcoord;
+		Math3D::Vector4 normal = vf.normal;
+
+		Math3D::Vector4 lightDir = dirLight.direction;
+		VectorInverse(lightDir);
+		Normalize(lightDir);
+
+		float diff = fmaxf(Dot(normal, lightDir), 0.0f);
+		lightDir = dirLight.direction;
+		Normalize(lightDir);
+		Math3D::Vector4 vec;
+		Reflect(vec, lightDir, normal);
+		float shininess = material.shininess * (material.specularHighlightTexId == -1 ? 1 : textures[material.specularHighlightTexId].TextureValueRead(tex.u, tex.v));
+		float spec = powf(fmaxf(Dot(viewdir, vec), 0.0f), shininess);
+
+		Base3D::Color temp = { 0.0f, 0.0f, 0.0f, 1.0f };
+		Base3D::Color temp2 = material.ambientTexId == -1 ? material.ambient : textures[material.ambientTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
+		ColorProduct(temp, dirLight.abmient, temp2);
+		color += temp;
+		temp2 = material.diffuseTexId == -1 ? material.diffuse : textures[material.diffuseTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
+		ColorProduct(temp, dirLight.diffuse, temp2);
+		temp = temp * diff;
+		color += temp;
+		temp2 = material.specularTexId == -1 ? material.specular : textures[material.specularTexId].TextureRead(&, tex->u, tex->v, vf->pos.w, 15);
+		ColorProduct(temp, dirLight.specular, temp2);
+		temp = temp * spec;
+		color += temp;
+
+		// 计算阴影
+		if (dirLight.shadow)
+		{
+			// fragPos -> 灯的坐标系 -> 灯的透视矩阵 -> 求得z坐标比较
+			Point tempPos = vf.pos;
+			tempPos.W() = 1.0f;
+			Base3D::Camera *camera = &cameras[0];
+			tempPos = tempPos * camera->viewMatrix;
+			tempPos = tempPos * camera->projectionMatrix;
+			Homogenize(tempPos, tempPos, camera->width, camera->height);
+			int y = (int)(tempPos.Y() + 0.5);
+			int x = (int)(tempPos.X() + 0.5);
+
+			Math3D::Vector4 tempNormal = vf.normal;
+			tempNormal = tempNormal * camera->viewMatrix;
+			VectorInverse(tempNormal);
+			float dot = Dot(tempNormal, camera->front);
+			if (dot > 0)
+			{
+				float bias = 0.015 * (1.0 - dot);
+				if (bias < 0.002f) bias = 0.001;
+				if (y >= 0 && x >= 0 && y < camera->height && x < camera->width)
+				{
+					float shadow = 0.0;
+					for (int i = -1; i <= 1; ++i)
+					{
+						for (int j = -1; j <= 1; ++j)
+						{
+							if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width)
+								continue;
+							float pcfDepth = pShadowBuffer[(y + j) * camera->width + (x + i)];
+							shadow += tempPos.Z() - bias > pcfDepth ? 1.0 : 0.0;
+						}
+					}
+					shadow /= 9.0;
+
+					Base3D::Color temp = { 0.3f, 0.3f, 0.3f, 0.3f };
+					temp = temp * shadow;
+					color = color - temp;
+				}
+			}
+		}
+
+
+		int i = 0;
+		for (i = 0; i < pointlight_cnt; i++)
+		{
+			temp = (color_t){ 0.0f, 0.0f, 0.0f, 1.0f };
+			pointlight_t *pointlight = &pointLights[i];
+
+			Base3D::Vector4 lightDir = { 0.0f, 0.0f, 0.0f, 0.0f };
+			vector_sub(&lightDir, &pointlight->pos, &vf->pos);
+			float distance = vector_length(&lightDir);
+			vector_normalize(&lightDir);
+			float diff = fmaxf(vector_dotproduct(&normal, &lightDir), 0.0f);
+			Base3D::Vector4 vec;
+			vector_inverse(&lightDir);
+			vector_reflect(&vec, &lightDir, &normal);
+			float shininess = material->shininess * (material->specular_highlight_tex_id == -1 ? 1 : texture_value_read(&textures[material->specular_highlight_tex_id], tex->u, tex->v));
+			float spec = powf(fmaxf(vector_dotproduct(&viewdir, &vec), 0.0f), shininess);
+			float num = pointlight->constant + pointlight->linear * distance + pointlight->quadratic * (distance * distance);
+			float attenuation = 0;
+			if (num != 0)
+				attenuation = 1.0f / num;
+
+			color_t c = (color_t){ 0.0f, 0.0f, 0.0f, 1.0f };
+			color_t c2 = material->ambient_tex_id == -1 ? material->ambient : texture_read(&textures[material->ambient_tex_id], tex->u, tex->v, vf->pos.w, 15);
+			color_product(&c, &pointlight->ambi, &c2);
+			color_scale(&c, attenuation);
+			color_add(&temp, &temp, &c);
+			c2 = material->diffuse_tex_id == -1 ? material->diffuse : texture_read(&textures[material->diffuse_tex_id], tex->u, tex->v, vf->pos.w, 15);
+			color_product(&c, &pointlight->diff, &c2);
+			color_scale(&c, diff * attenuation);
+			color_add(&temp, &temp, &c);
+			c2 = material->specular_tex_id == -1 ? material->specular : texture_read(&textures[material->specular_tex_id], tex->u, tex->v, vf->pos.w, 15);
+			color_product(&c, &pointlight->spec, &c2);
+			color_scale(&c, spec * attenuation);
+			color_add(&temp, &temp, &c);
+
+			color_add(color, color, &temp);
+		}
+	}
+
+	void Raster::DrawScanline(Scanline *scanline, Point *points, Base3D::v2f *vfs) 
 	{
 		int y = scanline->y;
 		int x = scanline->x;
-		int width = device->camera->width;
-		int render_state = device->render_state;
+		int width = camera.width;
+		int render_state = renderState;
 		int count = scanline->w;
 		for (; count > 0 && x < width; x++, count--) {
 			if (x >= 0) {
-				if (device->shadowbuffer != NULL) {
-					float z = scanline->v.pos.z;
-					if (z <= device->shadowbuffer[y*width + x]) {
-						device->shadowbuffer[y*width + x] = z;
+				if (shadowBuffer != NULL) {
+					float z = scanline->v.pos.Z();
+					if (z <= shadowBuffer[y*width + x]) {
+						shadowBuffer[y*width + x] = z;
 					}
 				}
 
-				float rhw = scanline->v.pos.w;
-				if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x]) {
-					if (device->zbuffer != NULL)
-						device->zbuffer[y*width + x] = rhw;
+				float rhw = scanline->v.pos.W();
+				if (zBuffer == NULL || rhw >= zBuffer[y*width + x]) {
+					if (zBuffer != NULL)
+						zBuffer[y*width + x] = rhw;
 
-					if (device->framebuffer != NULL) {
-						color_t color = { 0.0f, 0.0f, 0.0f, 1.0f };
+					if (frameBuffer != NULL) {
+						Base3D::Color color = { 0.0f, 0.0f, 0.0f, 1.0f };
 						v2f vf;
 						float w = 1.0f / scanline->v.pos.w;
-						point_t barycenter = { 0.0f, 0.0f, 0.0f, 1.0f };
-						point_t interpos = scanline->v.pos;
-						transform_homogenize_reverse(&interpos, &interpos, w, device->camera->width, device->camera->height);
-						computeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
+						Point barycenter(0.0f, 0.0f, 0.0f, 1.0f);
+						Point interpos = scanline->v.pos;
+						transform.homogenizeReverse(&interpos, &interpos, w, camera.width, camera.height);
+						Math3D::ComputeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
 
 
 						v2f_interpolating(&vf, &vfs[0], &vfs[1], &vfs[2], barycenter.x, barycenter.y, barycenter.z);
@@ -213,10 +347,10 @@ namespace Render3D
 							b = color.b;
 						}
 
-						int A = CMID((int)(a * 255.0f), 0, 255);
-						int R = CMID((int)(r * 255.0f), 0, 255);
-						int G = CMID((int)(g * 255.0f), 0, 255);
-						int B = CMID((int)(b * 255.0f), 0, 255);
+						int A = Clamp((int)(a * 255.0f), 0, 255);
+						int R = Clamp((int)(r * 255.0f), 0, 255);
+						int G = Clamp((int)(g * 255.0f), 0, 255);
+						int B = Clamp((int)(b * 255.0f), 0, 255);
 
 						device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
 					}

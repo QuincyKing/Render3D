@@ -15,6 +15,7 @@
 
 namespace Math3D
 {
+	#pragma region MathUtil
 	#define PI 3.1415926
 	#define angleToRadian(X) ((X)/180 * PI)
 	#define radianToAngle(X) ((X)/PI*180)
@@ -41,6 +42,63 @@ namespace Math3D
 		return r - 1;
 	}
 
+	/*bool computeBarycentricCoords3d(Render3D::Point *res, const Render3D::Point &p0, const Render3D::Point &p1,
+		const Render3D::Point &p2, const Render3D::Point &p)
+	{
+		vector_t d1, d2, n;
+		vector_sub(&d1, p1, p0);
+		vector_sub(&d2, p2, p1);
+		vector_crossproduct(&n, &d1, &d2);
+		float u1, u2, u3, u4;
+		float v1, v2, v3, v4;
+		if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z)))
+		{
+			u1 = p0->y - p2->y;
+			u2 = p1->y - p2->y;
+			u3 = p->y - p0->y;
+			u4 = p->y - p2->y;
+			v1 = p0->z - p2->z;
+			v2 = p1->z - p2->z;
+			v3 = p->z - p0->z;
+			v4 = p->z - p2->z;
+		}
+		else if (fabs(n.y) >= fabs(n.z)) 
+		{
+			u1 = p0->z - p2->z;
+			u2 = p1->z - p2->z;
+			u3 = p->z - p0->z;
+			u4 = p->z - p2->z;
+			v1 = p0->x - p2->x;
+			v2 = p1->x - p2->x;
+			v3 = p->x - p0->x;
+			v4 = p->x - p2->x;
+		}
+		else
+		{
+			u1 = p0->x - p2->x;
+			u2 = p1->x - p2->x;
+			u3 = p->x - p0->x;
+			u4 = p->x - p2->x;
+			v1 = p0->y - p2->y;
+			v2 = p1->y - p2->y;
+			v3 = p->y - p0->y;
+			v4 = p->y - p2->y;
+		}
+
+		float denom = v1 * u2 - v2 * u1;
+		if (fabsf(denom) < 1e-6) 
+		{
+			return false;
+		}
+		float oneOverDenom = 1.0f / denom;
+		res->x = (v4 * u2 - v2 * u4) * oneOverDenom;
+		res->y = (v1 * u3 - v3 * u1) * oneOverDenom;
+		res->z = 1.0f - res->x - res->y;
+		return true;
+	}*/
+
+#pragma endregion
+    #pragma region VectoUtil
 	template<typename Real>
 	inline Vector<Real, 4> operator* (const Vector<Real, 4>& vec, const Matrix<Real>& _mat)
 	{
@@ -51,6 +109,7 @@ namespace Math3D
 			vec[0] * _mat.M14 + vec[1] * _mat.M24 + vec[2] * _mat.M34 + vec[3] * _mat.M44);
 	}
 
+	
 	template<typename Real>
 	inline Vector<Real, 4> operator* (const Matrix<Real>& _mat, const Vector<Real, 4>& vec)
 	{
@@ -61,6 +120,108 @@ namespace Math3D
 			_mat.M41*vec[0] + _mat.M42*vec[1] + _mat.M43*vec[2] + _mat.M44*vec[3]);
 	}
 
+	template <class Real, int Size>
+	inline Vector<Real, Size> operator* (Real fScalar, const Vector<Real, Size>& rhs)
+	{
+		Vector<Real, Size> result;
+		for (int i = 0; i < Size; i++)
+			result[i] = fScalar * rhs[i];
+
+		return result;
+	}
+
+	template< typename Real, int Size >
+	inline Real Length(const Vector<Real, Size>& vec)
+	{
+		Real result = Real(0);
+		for (int i = 0; i < Size; i++)
+			result += vec[i] * vec[i];
+		return sqrt(result);
+	}
+
+	template< typename Real, int Size >
+	inline Real LengthSquared(const Vector<Real, Size>& vec)
+	{
+		Real result = Real(0);
+		for (int i = 0; i < Size - 1; i++)
+			result += vec[i] * vec[i];
+		return result;
+	}
+
+	template< typename Real, int Size >
+	inline Real Dot(const Vector<Real, Size>& lfs, const Vector<Real, Size>& rhs)
+	{
+		Real result = Real(0);
+		for (int i = 0; i < Size; i++)
+			result += lfs[i] * rhs[i];
+		return result;
+	}
+
+	template< typename Real, int Size >
+	inline Vector<Real, Size> Normalize(const Vector<Real, Size>& vec)
+	{
+		Real fLength = LengthSquared(vec);
+		Real fInvScalar = ((Real)1.0) / ((Real)sqrt((double)fLength));
+		return vec * fInvScalar;
+	}
+
+	template< typename Real, int Size >
+	inline Vector<Real, Size> Lerp(const Vector<Real, Size>& vec1, const Vector<Real, Size>& vec2, float t)
+	{
+		Vector<Real, Size> retVal;
+
+		for (uint32_t i = 0; i < Size; ++i)
+		{
+			retVal[i] = vec1[i] + (vec2[i] - vec1[i]) * t;
+		}
+
+		return retVal;
+	}
+
+	template<typename Real>
+	inline Vector<Real, 3> Cross(const Vector<Real, 3>& vec1, const Vector<Real, 3>& vec2)
+	{
+		return Vector<Real, 3>(
+			vec1.Y() * vec2.Z() - vec1.Z() * vec2.Y(),
+			vec1.Z() * vec2.X() - vec1.X() * vec2.Z(),
+			vec1.X() * vec2.Y() - vec1.Y() * vec2.X());
+	}
+
+	template<typename Real>
+	inline Vector<Real, 4> Cross(const Vector<Real, 4>& vec1, const Vector<Real, 4>& vec2)
+	{
+		return Vector<Real, 4>(
+			vec1.Y() * vec2.Z() - vec1.Z() * vec2.Y(),
+			vec1.Z() * vec2.X() - vec1.X() * vec2.Z(),
+			vec1.X() * vec2.Y() - vec1.Y() * vec2.X(),
+			Real(0));
+	}
+
+	static void VectorInterp(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
+	{
+		z[0] = Interp(x1.X(), x2.X(), t);
+		z[1] = Interp(x1.Y(), x2.Y(), t);
+		z[2] = Interp(x1.Z(), x2.Z(), t);
+		z[3] = 1.0f;
+	}
+
+	static void VectorInverse(Vector4 &v)
+	{
+		v.X() = -v.X();
+		v.Y() = -v.Y();
+		v.Z() = -v.Z();
+	}
+
+	void Reflect(Vector4 &r, const Vector4 &v, const Vector4 &n) 
+	{
+		r = n;
+		r = r * (-2 * Dot(v, n));
+		r += v;
+	}
+
+	#pragma endregion
+
+    #pragma region MatrixUtil
 	template<typename Real>
 	inline Matrix<Real> operator*(const Matrix<Real>& M1, Matrix<Real>& M2)
 	{
@@ -237,90 +398,6 @@ namespace Math3D
 		return fDet;
 	}
 
-	template <class Real, int Size>
-	inline Vector<Real, Size> operator* (Real fScalar, const Vector<Real, Size>& rhs)
-	{
-		Vector<Real, Size> result;
-		for (int i = 0; i < Size; i++)
-			result[i] = fScalar * rhs[i];
-
-		return result;
-	}
-
-	template< typename Real, int Size >
-	inline Real Length(const Vector<Real, Size>& vec)
-	{
-		Real result = Real(0);
-		for (int i = 0; i < Size; i++)
-			result += vec[i] * vec[i];
-		return sqrt(result);
-	}
-
-	template< typename Real, int Size >
-	inline Real LengthSquared(const Vector<Real, Size>& vec)
-	{
-		Real result = Real(0);
-		for (int i = 0; i < Size-1; i++)
-			result += vec[i] * vec[i];
-		return result;
-	}
-
-	template< typename Real, int Size >
-	inline Real Dot(const Vector<Real, Size>& lfs, const Vector<Real, Size>& rhs)
-	{
-		Real result = Real(0);
-		for (int i = 0; i < Size; i++)
-			result += lfs[i] * rhs[i];
-		return result;
-	}
-
-	template< typename Real, int Size >
-	inline Vector<Real, Size> Normalize(const Vector<Real, Size>& vec)
-	{
-		Real fLength = LengthSquared(vec);
-		Real fInvScalar = ((Real)1.0) / ((Real)sqrt((double)fLength));
-		return vec * fInvScalar;
-	}
-
-	template< typename Real, int Size >
-	inline Vector<Real, Size> Lerp(const Vector<Real, Size>& vec1, const Vector<Real, Size>& vec2, float t)
-	{
-		Vector<Real, Size> retVal;
-
-		for (uint32_t i = 0; i < Size; ++i)
-		{
-			retVal[i] = vec1[i] + (vec2[i] - vec1[i]) * t;
-		}
-
-		return retVal;
-	}
-
-	template<typename Real>
-	inline Vector<Real, 3> Cross(const Vector<Real, 3>& vec1, const Vector<Real, 3>& vec2)
-	{
-		return Vector<Real, 3>(
-			vec1.Y() * vec2.Z() - vec1.Z() * vec2.Y(),
-			vec1.Z() * vec2.X() - vec1.X() * vec2.Z(),
-			vec1.X() * vec2.Y() - vec1.Y() * vec2.X());
-	}
-
-	template<typename Real>
-	inline Vector<Real, 4> Cross(const Vector<Real, 4>& vec1, const Vector<Real, 4>& vec2)
-	{
-		return Vector<Real, 4>(
-			vec1.Y() * vec2.Z() - vec1.Z() * vec2.Y(),
-			vec1.Z() * vec2.X() - vec1.X() * vec2.Z(),
-			vec1.X() * vec2.Y() - vec1.Y() * vec2.X(),
-			Real(0));
-	}
-
-	static void VectorInterp(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
-	{
-		z[0] = Interp(x1.X(), x2.X(), t);
-		z[1] = Interp(x1.Y(), x2.Y(), t);
-		z[2] = Interp(x1.Z(), x2.Z(), t);
-		z[3] = 1.0f;
-	}
 
 	static void MatrixSetTranslate(Matrix44 &m, float x, float y, float z)
 	{
@@ -387,9 +464,10 @@ namespace Math3D
 		m.M23 = zaxis.Y();
 		m.M33 = zaxis.Z();
 		m.M43 = -Dot(zaxis, eye);
+		/*m.M43 = -Dot(zaxis, eye);
 
 		m.M14 = m.M24 = m.M34 = 0.0f;
-		m.M44 = 1.0f;
+		m.M44 = 1.0f;*/
 	}
 
 	static void MatrixSetAxis(Matrix44 &m, const Vector4 &xaxis, const Vector4 &yaxis, const Vector4 &zaxis, const Vector4 &pos) 
@@ -433,4 +511,6 @@ namespace Math3D
 		m.M12 = m.M13 = m.M14 = m.M21 = m.M23 = m.M24 = 0.0f;
 		m.M31 = m.M32 = m.M34 = 0.0f;
 	}
+
+#pragma endregion
 }

@@ -34,9 +34,9 @@ namespace Base3D
 		{
 			Base3D::Color color;
 			uint32_t* data = datas[0];
-			int width, height;
-			width = this->width;
-			height = this->height;
+			int _width, _height;
+			_width = this->width;
+			_height = this->height;
 			if (useMipmap) 
 			{
 				int tmiplevels = Math3D::LogBase2OfX(width);
@@ -45,26 +45,26 @@ namespace Base3D
 				data = (uint32_t*)datas[miplevel];
 				for (int ts = 0; ts < miplevel; ts++) 
 				{
-					width = width >> 1;
-					height = height >> 1;
+					_width = _width >> 1;
+					_height = _height >> 1;
 				}
 			}
 			// wrap ·½Ê½
-			u = (u - (int)u) * (width - 1);
-			v = (v - (int)v) * (height - 1);
+			u = (u - (int)u) * (_width - 1);
+			v = (v - (int)v) * (_height - 1);
 			int uint = (int)u;
 			int vint = (int)v;
 			int uint_pls_1 = uint + 1;
 			int vint_pls_1 = vint + 1;
-			uint_pls_1 = Clamp(uint_pls_1, 0, width - 1);
-			vint_pls_1 = Clamp(vint_pls_1, 0, height - 1);
+			uint_pls_1 = Clamp(uint_pls_1, 0, _width - 1);
+			vint_pls_1 = Clamp(vint_pls_1, 0, _height - 1);
 
 			int textel00, textel10, textel01, textel11;
 
-			textel00 = data[(vint + 0)*width + (uint + 0)];
-			textel10 = data[(vint_pls_1)*width + (uint + 0)];
-			textel01 = data[(vint + 0)*width + (uint_pls_1)];
-			textel11 = data[(vint_pls_1)*width + (uint_pls_1)];
+			textel00 = data[(vint + 0)*_width + (uint + 0)];
+			textel10 = data[(vint_pls_1)*_width + (uint + 0)];
+			textel01 = data[(vint + 0)*_width + (uint_pls_1)];
+			textel11 = data[(vint_pls_1)*_width + (uint_pls_1)];
 
 			int textel00_a = (textel00 >> 24) & 0xff;
 			int textel00_r = (textel00 >> 16) & 0xff;

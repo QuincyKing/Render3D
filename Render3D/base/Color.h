@@ -28,4 +28,19 @@ namespace Base3D
 		 tmp += src3 * c;
 		 res = tmp;
 	 }
+
+	 static void ColorProduct(Color &c, const Color &a, const Color &b)
+	 {
+		 c.r = a.r * b.r;
+		 c.g = a.g * b.g;
+		 c.b = a.b * b.b;
+		 c.a = a.a * b.a;
+	 }
+
+	 static void ColorProductArray(Color &c, const Color &a, const float *b)
+	 {
+		 c.r = a.r * b[0];
+		 c.g = a.g * b[1];
+		 c.b = a.b * b[2];
+	 }
 }
