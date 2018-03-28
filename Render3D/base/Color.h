@@ -19,15 +19,6 @@ namespace Base3D
 		 Color operator -(Color _color) const;
 	 };
 
-	 static void Interpolating(Color &res, const Color &src1, const Color &src2, const Color &src3
-		 , float a, float b, float c)
-	 {
-		 Color tmp;
-		 tmp = src1 * a;
-		 tmp += src2 * b;
-		 tmp += src3 * c;
-		 res = tmp;
-	 }
 
 	 static void ColorProduct(Color &c, const Color &a, const Color &b)
 	 {

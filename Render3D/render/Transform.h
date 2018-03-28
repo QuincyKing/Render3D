@@ -20,9 +20,7 @@ namespace Render3D
 	public:
 		void Update();
 		void Apply(Math3D::Vector4 &y, const Math3D::Vector4 &x);
-		void Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, float width, float height);
-		void HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, float width, float height);
-
+		
 		void SetModel(const Math3D::Matrix44 &_matrix);
 		void SetView(const Math3D::Matrix44 &_matrix);
 		void SetViewR(const Math3D::Matrix44 &_matrix);

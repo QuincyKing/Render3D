@@ -13,6 +13,7 @@
 #include "base\Camera.h"
 #include "base\Object.h"
 #include "base\Texture.h"
+
 #include <stdio.h>
 #include <vector>
 

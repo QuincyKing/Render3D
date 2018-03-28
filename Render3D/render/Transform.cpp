@@ -32,33 +32,6 @@ namespace Render3D
 		y = x * mvp;
 	}
 
-	/*!
-	* @function Render3D::Transform::Homogenize
-	*
-	* @brief Í¸ÊÓ³ý·¨
-	*
-	* @return void
-	*
-	* @param Math3D::Vector4 & y
-	* @param const Math3D::Vector4 & x
-	*/
-	void Transform::Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, float width, float height)
-	{
-		float rhw = 1.0f / x.W();
-		y.X() = (x.X() * rhw + 1.0f) * width * 0.5f;
-		y.Y() = (1.0f - x.Y() * rhw) * height * 0.5f;
-		y.Z() = x.Z() * rhw;
-		y.W() = 1.0f;
-	}
-
-	void Transform::HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, float width, float height)
-	{
-		y.X() = (x.X() * 2 / width - 1.0f) * w;
-		y.Y() = (1.0f - x.Y() * 2 / height) * w;
-		y.Z() = x.Z() * w;
-		y.W() = w;
-	}
-
 	void Transform::SetModel(const Math3D::Matrix44 &_matrix)
 	{
 		model = _matrix;

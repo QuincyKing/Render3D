@@ -28,17 +28,5 @@ namespace Base3D
 
 			return tmp;
 		}
-
-		static void Interpolating(Storage &dest, const Storage &src1, const Storage &src2, const Storage &src3, float a, float b, float c)
-		{
-			dest.a = dest.b = dest.c = dest.d = 0.0f;
-			Storage tmp;
-			tmp = src1;
-			dest = dest + (tmp * a);
-			tmp = src2;
-			dest = dest + (tmp * b);
-			tmp = src3;
-			dest = dest + (tmp * c);
-		}
 	};
 }

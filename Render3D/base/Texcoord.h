@@ -27,18 +27,4 @@ namespace Base3D
 			return tmp;
 		}
 	};
-
-	static void interpolating(Texcoord &dest, const Texcoord &src1, const Texcoord &src2, const Texcoord &src3, float a, float b, float c)
-	{
-		dest.u = dest.v = 0.0f;
-		Texcoord each = src1;
-		each = each * a;
-		dest = dest + each;
-		each = src2;
-		each = each * b;
-		dest = dest + each;
-		each = src3;
-		each = each * c;
-		dest = dest + each;
-	}
 }

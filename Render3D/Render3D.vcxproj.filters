@@ -358,7 +358,10 @@
     <ClInclude Include="base\Camera.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="base\texcoord.h">
+    <ClInclude Include="base\Shader.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Texcoord.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>

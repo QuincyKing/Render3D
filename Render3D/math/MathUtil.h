@@ -11,6 +11,10 @@
 
 #include "Matrix.h"
 #include "Vector.h"
+#include "../base/Color.h"
+#include "../base/Shader.h"
+#include "../base/Texcoord.h"
+#include "../base/Storage.h"
 #include <cmath>
 
 namespace Math3D
@@ -40,6 +44,23 @@ namespace Math3D
 			r++;
 		}
 		return r - 1;
+	}
+
+	static void Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, float width, float height)
+	{
+		float rhw = 1.0f / x.W();
+		y.X() = (x.X() * rhw + 1.0f) * width * 0.5f;
+		y.Y() = (1.0f - x.Y() * rhw) * height * 0.5f;
+		y.Z() = x.Z() * rhw;
+		y.W() = 1.0f;
+	}
+
+	static void HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, float width, float height)
+	{
+		y.X() = (x.X() * 2 / width - 1.0f) * w;
+		y.Y() = (1.0f - x.Y() * 2 / height) * w;
+		y.Z() = x.Z() * w;
+		y.W() = w;
 	}
 
 	/*bool computeBarycentricCoords3d(Render3D::Point *res, const Render3D::Point &p0, const Render3D::Point &p1,
@@ -98,6 +119,64 @@ namespace Math3D
 	}*/
 
 #pragma endregion
+
+    #pragma region ColorUtil
+	static void ColorInterpolating(Base3D::Color &res, const Base3D::Color &src1, const Base3D::Color &src2, 
+		const Base3D::Color &src3, float a, float b, float c)
+	{
+		Base3D::Color tmp;
+		tmp = src1 * a;
+		tmp += src2 * b;
+		tmp += src3 * c;
+		res = tmp;
+	}
+
+    #pragma endregion
+
+	#pragma region TexcoordUtil
+	static void TexcoordInterpolating(Base3D::Texcoord &dest, const Base3D::Texcoord &src1, const Base3D::Texcoord &src2, const Base3D::Texcoord &src3, float a, float b, float c)
+	{
+		dest.u = dest.v = 0.0f;
+		Base3D::Texcoord each = src1;
+		each = each * a;
+		dest = dest + each;
+		each = src2;
+		each = each * b;
+		dest = dest + each;
+		each = src3;
+		each = each * c;
+		dest = dest + each;
+	}
+	#pragma endregion
+
+	#pragma region StorageUtil
+	static void StorageInterpolating(Base3D::Storage &dest, const Base3D::Storage &src1, const Base3D::Storage &src2, const Base3D::Storage &src3, float a, float b, float c)
+	{
+		dest.a = dest.b = dest.c = dest.d = 0.0f;
+		Base3D::Storage tmp;
+		tmp = src1;
+		dest = dest + (tmp * a);
+		tmp = src2;
+		dest = dest + (tmp * b);
+		tmp = src3;
+		dest = dest + (tmp * c);
+	}
+	#pragma endregion
+    #pragma region ShaderUtil
+	static void V2fInterpolating(Base3D::v2f &dest, const Base3D::v2f &src1, const Base3D::v2f &src2, const Base3D::v2f &src3, float a, float b, float c) 
+	{
+		VectorInterpolating(dest.pos, src1.pos,  src2.pos,  src3.pos, a, b, c);
+		ColorInterpolating(dest.color,  src1.color,  src2.color,  src3.color, a, b, c);
+		TexcoordInterpolating( dest.texcoord,  src1.texcoord,  src2.texcoord,  src3.texcoord, a, b, c);
+		VectorInterpolating( dest.normal,  src1.normal,  src2.normal,  src3.normal, a, b, c);
+		VectorInterpolating( dest.storage0,  src1.storage0,  src2.storage0,  src3.storage0, a, b, c);
+		VectorInterpolating( dest.storage1,  src1.storage1,  src2.storage1,  src3.storage1, a, b, c);
+		VectorInterpolating( dest.storage2,  src1.storage2,  src2.storage2,  src3.storage2, a, b, c);
+	}
+	#pragma endregion
+
+
+
     #pragma region VectoUtil
 	template<typename Real>
 	inline Vector<Real, 4> operator* (const Vector<Real, 4>& vec, const Matrix<Real>& _mat)
@@ -197,12 +276,26 @@ namespace Math3D
 			Real(0));
 	}
 
-	static void VectorInterp(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
+	static void VectorInterpolating(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
 	{
 		z[0] = Interp(x1.X(), x2.X(), t);
 		z[1] = Interp(x1.Y(), x2.Y(), t);
 		z[2] = Interp(x1.Z(), x2.Z(), t);
 		z[3] = 1.0f;
+	}
+
+	void VectorInterpolating(Vector4 &dest, const Vector4 &src1, const Vector4 &src2, const Vector4 &src3, float a, float b, float c) 
+	{
+		dest.X() = dest.Y() = dest.Z() = dest.W() = 0.0f;
+		Vector4 each = src1;
+		each = each * a;
+		dest = dest + each;
+		each = src2;
+		each = each * b;
+		dest = dest + each;
+		each = src3;
+		each = each * c;
+		dest = dest + each;
 	}
 
 	static void VectorInverse(Vector4 &v)

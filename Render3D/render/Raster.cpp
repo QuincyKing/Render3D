@@ -174,6 +174,7 @@ namespace Render3D
 	std::vector<Base3D::Texture> textures;
 	std::vector<Base3D::Camera> cameras;
 	float *pShadowBuffer;
+	std::vector<Base3D::PointLight> pointLights;
 
 	void Raster::FragShader(Base3D::v2f &vf, Base3D::Color &color)
 	{
@@ -204,7 +205,7 @@ namespace Render3D
 		ColorProduct(temp, dirLight.diffuse, temp2);
 		temp = temp * diff;
 		color += temp;
-		temp2 = material.specularTexId == -1 ? material.specular : textures[material.specularTexId].TextureRead(&, tex->u, tex->v, vf->pos.w, 15);
+		temp2 = material.specularTexId == -1 ? material.specular : textures[material.specularTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
 		ColorProduct(temp, dirLight.specular, temp2);
 		temp = temp * spec;
 		color += temp;
@@ -254,93 +255,101 @@ namespace Render3D
 
 
 		int i = 0;
-		for (i = 0; i < pointlight_cnt; i++)
+		for (i = 0; i < pointLights.size(); i++)
 		{
-			temp = (color_t){ 0.0f, 0.0f, 0.0f, 1.0f };
-			pointlight_t *pointlight = &pointLights[i];
+			temp = Base3D::Color(0.0f, 0.0f, 0.0f, 1.0f);
+			Base3D::PointLight pointlight = pointLights[i];
 
-			Base3D::Vector4 lightDir = { 0.0f, 0.0f, 0.0f, 0.0f };
-			vector_sub(&lightDir, &pointlight->pos, &vf->pos);
-			float distance = vector_length(&lightDir);
-			vector_normalize(&lightDir);
-			float diff = fmaxf(vector_dotproduct(&normal, &lightDir), 0.0f);
-			Base3D::Vector4 vec;
-			vector_inverse(&lightDir);
-			vector_reflect(&vec, &lightDir, &normal);
-			float shininess = material->shininess * (material->specular_highlight_tex_id == -1 ? 1 : texture_value_read(&textures[material->specular_highlight_tex_id], tex->u, tex->v));
-			float spec = powf(fmaxf(vector_dotproduct(&viewdir, &vec), 0.0f), shininess);
-			float num = pointlight->constant + pointlight->linear * distance + pointlight->quadratic * (distance * distance);
+			Math3D::Vector4 lightDir = { 0.0f, 0.0f, 0.0f, 0.0f };
+			lightDir = pointlight.position - vf.pos;
+			float distance = Length(lightDir);
+			Normalize(lightDir);
+			float diff = fmaxf(Dot(normal, lightDir), 0.0f);
+			Math3D::Vector4 vec;
+			VectorInverse(lightDir);
+			Reflect(vec, lightDir, normal);
+			float shininess = material.shininess * (material.specularHighlightTexId == -1 ? 1 : textures[material.specularHighlightTexId].TextureValueRead(tex.u, tex.v));
+			float spec = powf(fmaxf(Dot(viewdir, vec), 0.0f), shininess);
+			float num = pointlight.constant + pointlight.linear * distance + pointlight.quadratic * (distance * distance);
 			float attenuation = 0;
 			if (num != 0)
 				attenuation = 1.0f / num;
 
-			color_t c = (color_t){ 0.0f, 0.0f, 0.0f, 1.0f };
-			color_t c2 = material->ambient_tex_id == -1 ? material->ambient : texture_read(&textures[material->ambient_tex_id], tex->u, tex->v, vf->pos.w, 15);
-			color_product(&c, &pointlight->ambi, &c2);
-			color_scale(&c, attenuation);
-			color_add(&temp, &temp, &c);
-			c2 = material->diffuse_tex_id == -1 ? material->diffuse : texture_read(&textures[material->diffuse_tex_id], tex->u, tex->v, vf->pos.w, 15);
-			color_product(&c, &pointlight->diff, &c2);
-			color_scale(&c, diff * attenuation);
-			color_add(&temp, &temp, &c);
-			c2 = material->specular_tex_id == -1 ? material->specular : texture_read(&textures[material->specular_tex_id], tex->u, tex->v, vf->pos.w, 15);
-			color_product(&c, &pointlight->spec, &c2);
-			color_scale(&c, spec * attenuation);
-			color_add(&temp, &temp, &c);
+			Base3D::Color c = Base3D::Color(0.0f, 0.0f, 0.0f, 1.0f);
+			Base3D::Color c2 = material.ambientTexId == -1 ? material.ambient : textures[material.ambientTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
+			ColorProduct(c, pointlight.abmient, c2);
+			c = c * attenuation;
+			temp = temp + c;
+			c2 = material.diffuseTexId == -1 ? material.diffuse : textures[material.diffuseTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
+			ColorProduct(c, pointlight.diffuse, c2);
+			c = c * (diff * attenuation);
+			temp = temp + c;
+			c2 = material.specularTexId == -1 ? material.specular : textures[material.specularTexId].TextureRead(tex.u, tex.v, vf.pos.W(), 15);
+			ColorProduct(c, pointlight.specular, c2);
+			c = c * (spec * attenuation);
+			temp = temp + c;
 
-			color_add(color, color, &temp);
+			color = color + temp;
 		}
 	}
 
-	void Raster::DrawScanline(Scanline *scanline, Point *points, Base3D::v2f *vfs) 
+	void Raster::DrawScanline(Scanline &scanline, Point &points, Base3D::v2f &vfs) 
 	{
-		int y = scanline->y;
-		int x = scanline->x;
+		int y = scanline.y;
+		int x = scanline.x;
 		int width = camera.width;
 		int render_state = renderState;
-		int count = scanline->w;
-		for (; count > 0 && x < width; x++, count--) {
-			if (x >= 0) {
-				if (shadowBuffer != NULL) {
-					float z = scanline->v.pos.Z();
-					if (z <= shadowBuffer[y*width + x]) {
+		int count = scanline.w;
+		for (; count > 0 && x < width; x++, count--)
+		{
+			if (x >= 0)
+			{
+				if (shadowBuffer != NULL)
+				{
+					float z = scanline.v.pos.Z();
+					if (z <= shadowBuffer[y*width + x]) 
+					{
 						shadowBuffer[y*width + x] = z;
 					}
 				}
 
-				float rhw = scanline->v.pos.W();
-				if (zBuffer == NULL || rhw >= zBuffer[y*width + x]) {
+				float rhw = scanline.v.pos.W();
+				if (zBuffer == NULL || rhw >= zBuffer[y*width + x])
+				{
 					if (zBuffer != NULL)
 						zBuffer[y*width + x] = rhw;
 
-					if (frameBuffer != NULL) {
-						Base3D::Color color = { 0.0f, 0.0f, 0.0f, 1.0f };
-						v2f vf;
-						float w = 1.0f / scanline->v.pos.w;
+					if (frameBuffer != NULL) 
+					{
+						Base3D::Color color = Base3D::Color(0.0f, 0.0f, 0.0f, 1.0f);
+						Base3D::v2f vf;
+						float w = 1.0f / scanline.v.pos.W();
 						Point barycenter(0.0f, 0.0f, 0.0f, 1.0f);
-						Point interpos = scanline->v.pos;
-						transform.homogenizeReverse(&interpos, &interpos, w, camera.width, camera.height);
-						Math3D::ComputeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
+						Point interpos = scanline.v.pos;
+					    HomogenizeReverse(interpos, interpos, w, camera.width, camera.height);
+						ComputeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
 
 
-						v2f_interpolating(&vf, &vfs[0], &vfs[1], &vfs[2], barycenter.x, barycenter.y, barycenter.z);
-						vf.pos.w = w;
-						vector_normalize(&vf.normal);
+						V2fInterpolating(vf, vfs[0], vfs[1], vfs[2], barycenter.x, barycenter.y, barycenter.z);
+						vf.pos.W() = w;
+						Normalize(vf.normal);
 
-						frag_shader(device, &vf, &color);
+						FragShader(vf, color);
 
 						float a = 1.0f;
 						float r = 0.0f;
 						float g = 0.0f;
 						float b = 0.0f;
 
-						if (render_state & RENDER_STATE_COLOR) {
+						if (render_state & RENDER_STATE_COLOR)
+						{
 							a = vf.color.a;
 							r = vf.color.r;
 							g = vf.color.g;
 							b = vf.color.b;
 						}
-						if (render_state & RENDER_STATE_TEXTURE) {
+						if (render_state & RENDER_STATE_TEXTURE)
+						{
 							a = color.a;
 							r = color.r;
 							g = color.g;
@@ -352,11 +361,11 @@ namespace Render3D
 						int G = Clamp((int)(g * 255.0f), 0, 255);
 						int B = Clamp((int)(b * 255.0f), 0, 255);
 
-						device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
+						frameBuffer[y*width + x] = (R << 16) | (G << 8) | B;
 					}
 				}
 			}
-			vertex_add(&scanline->v, &scanline->step);
+			scanline.v.Add(scanline.step);
 		}
 	}
 }
