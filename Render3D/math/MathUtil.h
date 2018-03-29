@@ -62,62 +62,6 @@ namespace Math3D
 		y.Z() = x.Z() * w;
 		y.W() = w;
 	}
-
-	/*bool computeBarycentricCoords3d(Render3D::Point *res, const Render3D::Point &p0, const Render3D::Point &p1,
-		const Render3D::Point &p2, const Render3D::Point &p)
-	{
-		vector_t d1, d2, n;
-		vector_sub(&d1, p1, p0);
-		vector_sub(&d2, p2, p1);
-		vector_crossproduct(&n, &d1, &d2);
-		float u1, u2, u3, u4;
-		float v1, v2, v3, v4;
-		if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z)))
-		{
-			u1 = p0->y - p2->y;
-			u2 = p1->y - p2->y;
-			u3 = p->y - p0->y;
-			u4 = p->y - p2->y;
-			v1 = p0->z - p2->z;
-			v2 = p1->z - p2->z;
-			v3 = p->z - p0->z;
-			v4 = p->z - p2->z;
-		}
-		else if (fabs(n.y) >= fabs(n.z)) 
-		{
-			u1 = p0->z - p2->z;
-			u2 = p1->z - p2->z;
-			u3 = p->z - p0->z;
-			u4 = p->z - p2->z;
-			v1 = p0->x - p2->x;
-			v2 = p1->x - p2->x;
-			v3 = p->x - p0->x;
-			v4 = p->x - p2->x;
-		}
-		else
-		{
-			u1 = p0->x - p2->x;
-			u2 = p1->x - p2->x;
-			u3 = p->x - p0->x;
-			u4 = p->x - p2->x;
-			v1 = p0->y - p2->y;
-			v2 = p1->y - p2->y;
-			v3 = p->y - p0->y;
-			v4 = p->y - p2->y;
-		}
-
-		float denom = v1 * u2 - v2 * u1;
-		if (fabsf(denom) < 1e-6) 
-		{
-			return false;
-		}
-		float oneOverDenom = 1.0f / denom;
-		res->x = (v4 * u2 - v2 * u4) * oneOverDenom;
-		res->y = (v1 * u3 - v3 * u1) * oneOverDenom;
-		res->z = 1.0f - res->x - res->y;
-		return true;
-	}*/
-
 #pragma endregion
 
     #pragma region ColorUtil

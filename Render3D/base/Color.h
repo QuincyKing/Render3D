@@ -11,7 +11,7 @@ namespace Base3D
 		 Color(float r, float g, float b) : r(r), g(g), b(b), a(1.0f) { }
 		 Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) { }
 		 Color operator *(float scale) const;
-		 Color& operator =(Color &_color);
+		 Color& operator =(const Color &_color);
 		 Color operator +(Color _color) const;
 		 Color& operator +=(Color _color);
 		 Color operator *(Color _color) const;

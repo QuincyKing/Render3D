@@ -58,9 +58,10 @@ namespace Render3D
 		void ClipPolys(Vertex &v1, Vertex &v2, Vertex &v3, bool world);
 		void VertShader(Base3D::a2v &av, Base3D::v2f &vf);
 		void FragShader(Base3D::v2f &vf, Base3D::Color &color);
-		void DrawScanline(Scanline &scanline, Point &points, Base3D::v2f &vfs);
+		void DrawScanline(Scanline &scanline, Point *points, Base3D::v2f *vfs);
+		void RenderTrap(Trapezoid &trap, Point *points, Base3D::v2f *v2fs);
+		void DrawPrimitive(Vertex &t1, Vertex &t2, Vertex &t3);
 		void SetRenderState(int _render_state) { renderState = _render_state; }
-		uint32_t **m_framebuffer;		// 像素缓存：m_framebuffer[y] 代表第 y行
 
 	private:
 		Transform transform;			// 坐标变换器

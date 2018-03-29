@@ -98,6 +98,7 @@
     <ClInclude Include="base\Light\PointLight.h" />
     <ClInclude Include="base\Material.h" />
     <ClInclude Include="base\Shader.h" />
+    <ClInclude Include="base\Storage.h" />
     <ClInclude Include="base\Texcoord.h" />
     <ClInclude Include="base\Texture.h" />
     <ClInclude Include="external\libpng\include\crc32.h" />

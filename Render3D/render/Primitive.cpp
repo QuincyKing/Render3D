@@ -34,7 +34,7 @@ namespace Render3D
 	*/
 	void Vertex::Interp(const Vertex x1, const Vertex x2, float t)
 	{
-		Math3D::VectorInterp(this->pos, x1.pos, x2.pos, t);
+		Math3D::VectorInterpolating(this->pos, x1.pos, x2.pos, t);
 		this->tc.u = Math3D::Interp(x1.tc.u, x2.tc.u, t);
 		this->tc.v = Math3D::Interp(x1.tc.v, x2.tc.v, t);
 		this->color.r = Math3D::Interp(x1.color.r, x2.color.r, t);

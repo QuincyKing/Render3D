@@ -20,11 +20,6 @@ namespace Render3D
 	public:
 		void Update();
 		void Apply(Math3D::Vector4 &y, const Math3D::Vector4 &x);
-		
-		void SetModel(const Math3D::Matrix44 &_matrix);
-		void SetView(const Math3D::Matrix44 &_matrix);
-		void SetViewR(const Math3D::Matrix44 &_matrix);
-		void SetProjection(const Math3D::Matrix44 &_matrix);
 		/*!
 		* @function Transform::CheckCVV
 		*
@@ -49,7 +44,7 @@ namespace Render3D
 			return check;
 		}
 
-	private:
+	public:
 		Math3D::Matrix44 model;         // 世界坐标变换
 		Math3D::Matrix44 view;          // 摄影机坐标变换
 		Math3D::Matrix44 viewR;

@@ -31,24 +31,4 @@ namespace Render3D
 	{
 		y = x * mvp;
 	}
-
-	void Transform::SetModel(const Math3D::Matrix44 &_matrix)
-	{
-		model = _matrix;
-	}
-
-	void Transform::SetView(const Math3D::Matrix44 &_matrix)
-	{
-		view = _matrix;
-	}
-
-	void Transform::SetViewR(const Math3D::Matrix44 &_matrix)
-	{
-		viewR = _matrix;
-	}
-
-	void Transform::SetProjection(const Math3D::Matrix44 &_matrix)
-	{
-		projection = _matrix;
-	}
 }

@@ -14,6 +14,7 @@
 #include "../math/Vector.h"
 #include "../math/MathUtil.h"
 #include "../base/Color.h"
+#include "../math/MathUtil.h"
 
 using namespace Math3D;
 
@@ -27,12 +28,22 @@ namespace Render3D
 		Point pos;
 		Texcoord tc;
 		Base3D::Color color;
+		Vector4 normal;
 		float rhw;
 
 		void InitWithRhw();
 		void Interp(const Vertex x1, const Vertex x2, float t);
 		void Division(const Vertex x1, const Vertex x2, float w);
 		void Add(const Vertex x);
+
+		Vertex & operator=(const Vertex &ver)
+		{
+			this->pos = ver.pos;
+			this->rhw = ver.rhw;
+			this->normal = ver.normal;
+			this->color = ver.color;
+			return *this;
+		}
 	};
 
 	struct Edge

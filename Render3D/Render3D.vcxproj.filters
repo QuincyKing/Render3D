@@ -364,6 +364,9 @@
     <ClInclude Include="base\Texcoord.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="base\Storage.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
