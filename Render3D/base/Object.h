@@ -9,9 +9,9 @@ namespace Base3D
 	{
 	public:
 		Render3D::Vertex *mesh;
-		unsigned long mesh_num;
-		int* material_ids;
-		int texture_id;
+		unsigned long meshNum;
+		int* materialIds;
+		int textureId;
 		bool shadow;
 
 		bool dirty;

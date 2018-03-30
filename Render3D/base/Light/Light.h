@@ -11,5 +11,12 @@ namespace Base3D
 		Color diffuse;
 		Color specular;
 		bool shadow;
+
+		Light() = default;
+
+		Light(Color abmi, Color diff, Color spe, bool sha) : abmient(abmi), diffuse(diff), specular(spe), shadow(sha)
+		{
+
+		}
 	};
 }

@@ -46,6 +46,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\Render3D\external\tinyobj;..\Render3D\external\sdl2\include;..\Render3D\external\libpng\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Render3D\external\libpng\prebuild\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,6 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/D _CRT_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -72,6 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/D _CRT_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -88,7 +92,6 @@
     <ClCompile Include="render\Primitive.cpp" />
     <ClCompile Include="render\Transform.cpp" />
     <ClCompile Include="utils\Utils.cpp" />
-    <ClCompile Include="window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Camera.h" />
@@ -97,6 +100,7 @@
     <ClInclude Include="base\Light\Light.h" />
     <ClInclude Include="base\Light\PointLight.h" />
     <ClInclude Include="base\Material.h" />
+    <ClInclude Include="base\Object.h" />
     <ClInclude Include="base\Shader.h" />
     <ClInclude Include="base\Storage.h" />
     <ClInclude Include="base\Texcoord.h" />
@@ -204,7 +208,6 @@
     <ClInclude Include="render\Primitive.h" />
     <ClInclude Include="render\Transform.h" />
     <ClInclude Include="utils\Utils.h" />
-    <ClInclude Include="window\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\libpng\prebuild\windows\libpng16.lib" />

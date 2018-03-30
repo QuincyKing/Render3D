@@ -40,7 +40,7 @@ namespace Base3D
 			if (useMipmap) 
 			{
 				int tmiplevels = Math3D::LogBase2OfX(width);
-				int miplevel = tmiplevels * (z / maxz);
+				int miplevel = int(tmiplevels * (z / maxz));
 				if (miplevel > tmiplevels) miplevel = tmiplevels;
 				data = (uint32_t*)datas[miplevel];
 				for (int ts = 0; ts < miplevel; ts++) 
@@ -89,8 +89,8 @@ namespace Base3D
 			float dtu = u - (float)uint;
 			float dtv = v - (float)vint;
 
-			float one_minus_dtu = 1.0 - dtu;
-			float one_minus_dtv = 1.0 - dtv;
+			float one_minus_dtu = 1.0f - dtu;
+			float one_minus_dtv = 1.0f- dtv;
 
 			float one_minus_dtu_x_one_minus_dtv = (one_minus_dtu)* (one_minus_dtv);
 			float dtu_x_one_minus_dtv = (dtu)* (one_minus_dtv);

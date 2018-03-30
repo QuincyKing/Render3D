@@ -43,7 +43,7 @@ namespace Render3D
 	class Raster
 	{
 	public:
-		void Init(Raster _raster);
+		void Init();
 		void SetBackground(uint32_t _background);
 		void SetForeground(uint32_t _foreground);
 		void SetFrameBuffer(uint32_t *_framebuffer);
@@ -63,9 +63,9 @@ namespace Render3D
 		void DrawPrimitive(Vertex &t1, Vertex &t2, Vertex &t3);
 		void SetRenderState(int _render_state) { renderState = _render_state; }
 
-	private:
+	public:
 		Transform transform;			// ×ø±ê±ä»»Æ÷
-		uint32_t *frameBuffer;             // ÏñËØ»º´æ
+		uint32_t *frameBuffer;          // ÏñËØ»º´æ
 		float *zBuffer;				    // Éî¶È»º´æ
 		float *shadowBuffer;            // ÒõÓ°»º´æ
 		int renderState;				// äÖÈ¾×´Ì¬

@@ -46,7 +46,7 @@ namespace Math3D
 		return r - 1;
 	}
 
-	static void Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, float width, float height)
+	static void Homogenize(Math3D::Vector4 &y, const Math3D::Vector4 &x, int width, int height)
 	{
 		float rhw = 1.0f / x.W();
 		y.X() = (x.X() * rhw + 1.0f) * width * 0.5f;
@@ -55,7 +55,7 @@ namespace Math3D
 		y.W() = 1.0f;
 	}
 
-	static void HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, float width, float height)
+	static void HomogenizeReverse(Math3D::Vector4 &y, const Math3D::Vector4 &x, float w, int width, int height)
 	{
 		y.X() = (x.X() * 2 / width - 1.0f) * w;
 		y.Y() = (1.0f - x.Y() * 2 / height) * w;
@@ -106,22 +106,8 @@ namespace Math3D
 		dest = dest + (tmp * c);
 	}
 	#pragma endregion
-    #pragma region ShaderUtil
-	static void V2fInterpolating(Base3D::v2f &dest, const Base3D::v2f &src1, const Base3D::v2f &src2, const Base3D::v2f &src3, float a, float b, float c) 
-	{
-		VectorInterpolating(dest.pos, src1.pos,  src2.pos,  src3.pos, a, b, c);
-		ColorInterpolating(dest.color,  src1.color,  src2.color,  src3.color, a, b, c);
-		TexcoordInterpolating( dest.texcoord,  src1.texcoord,  src2.texcoord,  src3.texcoord, a, b, c);
-		VectorInterpolating( dest.normal,  src1.normal,  src2.normal,  src3.normal, a, b, c);
-		VectorInterpolating( dest.storage0,  src1.storage0,  src2.storage0,  src3.storage0, a, b, c);
-		VectorInterpolating( dest.storage1,  src1.storage1,  src2.storage1,  src3.storage1, a, b, c);
-		VectorInterpolating( dest.storage2,  src1.storage2,  src2.storage2,  src3.storage2, a, b, c);
-	}
-	#pragma endregion
 
-
-
-    #pragma region VectoUtil
+    #pragma region VectorUtil
 	template<typename Real>
 	inline Vector<Real, 4> operator* (const Vector<Real, 4>& vec, const Matrix<Real>& _mat)
 	{
@@ -220,7 +206,7 @@ namespace Math3D
 			Real(0));
 	}
 
-	static void VectorInterpolating(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
+	inline void VectorInterpolating(Vector4 &z, const Vector4 x1, const Vector4 x2, float t)
 	{
 		z[0] = Interp(x1.X(), x2.X(), t);
 		z[1] = Interp(x1.Y(), x2.Y(), t);
@@ -228,7 +214,7 @@ namespace Math3D
 		z[3] = 1.0f;
 	}
 
-	void VectorInterpolating(Vector4 &dest, const Vector4 &src1, const Vector4 &src2, const Vector4 &src3, float a, float b, float c) 
+	inline void VectorInterpolating(Vector4 &dest, const Vector4 &src1, const Vector4 &src2, const Vector4 &src3, float a, float b, float c) 
 	{
 		dest.X() = dest.Y() = dest.Z() = dest.W() = 0.0f;
 		Vector4 each = src1;
@@ -249,7 +235,7 @@ namespace Math3D
 		v.Z() = -v.Z();
 	}
 
-	void Reflect(Vector4 &r, const Vector4 &v, const Vector4 &n) 
+	inline void Reflect(Vector4 &r, const Vector4 &v, const Vector4 &n) 
 	{
 		r = n;
 		r = r * (-2 * Dot(v, n));
@@ -507,6 +493,7 @@ namespace Math3D
 		m.M44 = 1.0f;*/
 	}
 
+		
 	static void MatrixSetAxis(Matrix44 &m, const Vector4 &xaxis, const Vector4 &yaxis, const Vector4 &zaxis, const Vector4 &pos) 
 	{
 		m.M11 = xaxis.X();
@@ -549,5 +536,18 @@ namespace Math3D
 		m.M31 = m.M32 = m.M34 = 0.0f;
 	}
 
+#pragma endregion
+
+#pragma region ShaderUtil
+	static void V2fInterpolating(Base3D::v2f &dest, const Base3D::v2f &src1, const Base3D::v2f &src2, const Base3D::v2f &src3, float a, float b, float c)
+	{
+		VectorInterpolating(dest.pos, src1.pos, src2.pos, src3.pos, a, b, c);
+		ColorInterpolating(dest.color, src1.color, src2.color, src3.color, a, b, c);
+		TexcoordInterpolating(dest.texcoord, src1.texcoord, src2.texcoord, src3.texcoord, a, b, c);
+		VectorInterpolating(dest.normal, src1.normal, src2.normal, src3.normal, a, b, c);
+		VectorInterpolating(dest.storage0, src1.storage0, src2.storage0, src3.storage0, a, b, c);
+		VectorInterpolating(dest.storage1, src1.storage1, src2.storage1, src3.storage1, a, b, c);
+		VectorInterpolating(dest.storage2, src1.storage2, src2.storage2, src3.storage2, a, b, c);
+	}
 #pragma endregion
 }

@@ -10,18 +10,15 @@
     <ClCompile Include="render\Raster.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="window\Window.cpp">
-      <Filter>window</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="utils\Utils.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="base\Color.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\Camera.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\Utils.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,9 +39,6 @@
     </ClInclude>
     <ClInclude Include="math\Vector.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="window\Window.h">
-      <Filter>window</Filter>
     </ClInclude>
     <ClInclude Include="external\libpng\include\private\pngpriv.h">
       <Filter>external\libpng\include\private</Filter>
@@ -367,6 +361,9 @@
     <ClInclude Include="base\Storage.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="base\Object.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -374,9 +371,6 @@
     </Filter>
     <Filter Include="render">
       <UniqueIdentifier>{307aef44-6d37-4735-998c-41b886acef70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="window">
-      <UniqueIdentifier>{c21315af-af78-40d5-adc4-1cc92a819fdf}</UniqueIdentifier>
     </Filter>
     <Filter Include="external">
       <UniqueIdentifier>{22bc0834-6629-4ce2-89d2-4422dcf1e47b}</UniqueIdentifier>

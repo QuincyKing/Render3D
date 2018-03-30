@@ -33,13 +33,13 @@ namespace Math3D
 		Matrix(const Matrix<T>& _rhs);
 		void MakeIdentity();
 		void MakeZero();
-		inline const Real* operator() () const					{ return m_Elements; }
-		inline void operator =();
-		inline Real* operator() ()								{ return m_Elements; }
-		inline Real operator[] (int index) const				{ return m_Elements[index]; }
-		inline Real& operator[] (int index)						{ return m_Elements[index]; }
-		inline Real operator() (int iRow, int iCol) const		{ return m_Elements[MatrixItem(iRow, iCol)]; }
-		inline Real& operator() (int iRow, int iCol)			{ return m_Elements[MatrixItem(iRow, iCol)]; }
+		inline const Real* operator() () const					{ return Elements; }
+		inline Matrix<Real>& operator =(const Matrix<Real>& _rhs);
+		inline Real* operator() ()								{ return Elements; }
+		inline Real operator[] (int index) const				{ return Elements[index]; }
+		inline Real& operator[] (int index)						{ return Elements[index]; }
+		inline Real operator() (int iRow, int iCol) const		{ return Elements[MatrixItem(iRow, iCol)]; }
+		inline Real& operator() (int iRow, int iCol)			{ return Elements[MatrixItem(iRow, iCol)]; }
 
 		void SetRow(int _iRow, const Vector<Real, 4>& _rhs);
 		Vector<Real, 4> GetRow(int _iRow) const;
@@ -61,7 +61,7 @@ namespace Math3D
 	public:
 		union
 		{
-			struct{ Real m_Elements[16]; };
+			struct{ Real Elements[16]; };
 			struct
 			{
 				Real M11, M12, M13, M14;
@@ -81,7 +81,7 @@ Matrix<Real>::Matrix()
 template<typename Real>
 Matrix<Real>::Matrix(const Real* _rhs)
 {
-	memcpy(m_Elements, _rhs, sizeof(m_Elements));
+	memcpy(Elements, _rhs, sizeof(Elements));
 }
 
 template<typename Real>
@@ -103,86 +103,88 @@ Matrix<Real>::Matrix(const Matrix<T>& _rhs)
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
-			m_Elements[MatrixItem(i, j)] = static_cast<Real>(_rhs.m_Elements[MatrixItem(i, j)]);
+			Elements[MatrixItem(i, j)] = static_cast<Real>(_rhs.Elements[MatrixItem(i, j)]);
 		}
 }
 
 template<typename Real>
 void Matrix<Real>::MakeIdentity()
 {
-	m_Elements[0] = (Real)1.0; m_Elements[1] = (Real)0.0; m_Elements[2] = (Real)0.0; m_Elements[3] = (Real)0.0;
-	m_Elements[4] = (Real)0.0; m_Elements[5] = (Real)1.0; m_Elements[6] = (Real)0.0; m_Elements[7] = (Real)0.0;
-	m_Elements[8] = (Real)0.0; m_Elements[9] = (Real)0.0; m_Elements[10] = (Real)1.0; m_Elements[11] = (Real)0.0;
-	m_Elements[12] = (Real)0.0; m_Elements[13] = (Real)0.0; m_Elements[14] = (Real)0.0; m_Elements[15] = (Real)1.0;
+	Elements[0] = (Real)1.0; Elements[1] = (Real)0.0; Elements[2] = (Real)0.0; Elements[3] = (Real)0.0;
+	Elements[4] = (Real)0.0; Elements[5] = (Real)1.0; Elements[6] = (Real)0.0; Elements[7] = (Real)0.0;
+	Elements[8] = (Real)0.0; Elements[9] = (Real)0.0; Elements[10] = (Real)1.0; Elements[11] = (Real)0.0;
+	Elements[12] = (Real)0.0; Elements[13] = (Real)0.0; Elements[14] = (Real)0.0; Elements[15] = (Real)1.0;
 }
 
 template<typename Real>
 void Matrix<Real>::MakeZero()
 {
-	memset(m_Elements, 0, sizeof(m_Elements));
+	memset(Elements, 0, sizeof(Elements));
 }
 
 template<typename Real>
 void Matrix<Real>::SetRow(int _iRow, const Vector<Real, 4>& _rhs)
 {
-	m_Elements[MatrixItem(_iRow, 0)] = _rhs[0];
-	m_Elements[MatrixItem(_iRow, 1)] = _rhs[1];
-	m_Elements[MatrixItem(_iRow, 2)] = _rhs[2];
-	m_Elements[MatrixItem(_iRow, 3)] = _rhs[3];
+	Elements[MatrixItem(_iRow, 0)] = _rhs[0];
+	Elements[MatrixItem(_iRow, 1)] = _rhs[1];
+	Elements[MatrixItem(_iRow, 2)] = _rhs[2];
+	Elements[MatrixItem(_iRow, 3)] = _rhs[3];
 }
 
 template<typename Real>
 Vector<Real, 4> Matrix<Real>::GetRow(int _iRow) const
 {
-	return Vector<Real, 4>(m_Elements[MatrixItem(_iRow, 0)], m_Elements[MatrixItem(_iRow, 1)],
-		m_Elements[MatrixItem(_iRow, 2)], m_Elements[MatrixItem(_iRow, 3)]);
+	return Vector<Real, 4>(Elements[MatrixItem(_iRow, 0)], Elements[MatrixItem(_iRow, 1)],
+		Elements[MatrixItem(_iRow, 2)], Elements[MatrixItem(_iRow, 3)]);
 }
 
 template<typename Real>
 void Matrix<Real>::SetColumn(int _iCol, const Vector<Real, 4>& _rhs)
 {
-	m_Elements[MatrixItem(0, _iCol)] = _rhs[0];
-	m_Elements[MatrixItem(1, _iCol)] = _rhs[1];
-	m_Elements[MatrixItem(2, _iCol)] = _rhs[2];
-	m_Elements[MatrixItem(3, _iCol)] = _rhs[3];
+	Elements[MatrixItem(0, _iCol)] = _rhs[0];
+	Elements[MatrixItem(1, _iCol)] = _rhs[1];
+	Elements[MatrixItem(2, _iCol)] = _rhs[2];
+	Elements[MatrixItem(3, _iCol)] = _rhs[3];
 }
 
 template<typename Real>
 Vector<Real, 4> Matrix<Real>::GetColumn(int _iCol) const
 {
-	return Vector<Real, 4>(m_Elements[MatrixItem(0, _iCol)], m_Elements[MatrixItem(1, _iCol)],
-		m_Elements[MatrixItem(2, _iCol)], m_Elements[MatrixItem(3, _iCol)]);
+	return Vector<Real, 4>(Elements[MatrixItem(0, _iCol)], Elements[MatrixItem(1, _iCol)],
+		Elements[MatrixItem(2, _iCol)], Elements[MatrixItem(3, _iCol)]);
 }
 
 template<typename Real>
-void Matrix<Real>::operator =(const Matrix<Real>& _rhs)
+Matrix<Real>& Matrix<Real>::operator =(const Matrix<Real>& _rhs)
 {
 	M11 = _rhs.M11; M21 = _rhs.M21; M31 = _rhs.M31; M41 = _rhs.M41;
 	M12 = _rhs.M12; M22 = _rhs.M22; M32 = _rhs.M32; M42 = _rhs.M42;
 	M13 = _rhs.M13; M23 = _rhs.M23; M33 = _rhs.M33; M43 = _rhs.M43;
 	M14 = _rhs.M14; M24 = _rhs.M24; M34 = _rhs.M34; M44 = _rhs.M44;
+
+	return *this;
 }
 
 template<typename Real>
 bool Matrix<Real>::operator== (const Matrix<Real>& _rhs) const
 {
-	return memcmp(m_Elements, _rhs.m_Elements, sizeof(m_Elements)) == 0;
+	return memcmp(Elements, _rhs.Elements, sizeof(Elements)) == 0;
 }
 
 template<typename Real>
 bool Matrix<Real>::operator!= (const Matrix<Real>& _rhs) const
 {
-	return memcmp(m_Elements, _rhs.m_Elements, sizeof(m_Elements)) != 0;
+	return memcmp(Elements, _rhs.Elements, sizeof(Elements)) != 0;
 }
 
 template<typename Real>
 Matrix<Real> Matrix<Real>::operator+ (const Matrix<Real>& _rhs) const
 {
 	return Matrix<Real>(
-		m_Elements[0] + _rhs.m_Elements[0], m_Elements[1] + _rhs.m_Elements[1], m_Elements[2] + _rhs.m_Elements[2], m_Elements[3] + _rhs.m_Elements[3],
-		m_Elements[4] + _rhs.m_Elements[4], m_Elements[5] + _rhs.m_Elements[5], m_Elements[6] + _rhs.m_Elements[6], m_Elements[7] + _rhs.m_Elements[7],
-		m_Elements[8] + _rhs.m_Elements[8], m_Elements[9] + _rhs.m_Elements[9], m_Elements[10] + _rhs.m_Elements[10], m_Elements[11] + _rhs.m_Elements[11],
-		m_Elements[12] + _rhs.m_Elements[12], m_Elements[13] + _rhs.m_Elements[13], m_Elements[14] + _rhs.m_Elements[14], m_Elements[15] + _rhs.m_Elements[15]
+		Elements[0] + _rhs.Elements[0], Elements[1] + _rhs.Elements[1], Elements[2] + _rhs.Elements[2], Elements[3] + _rhs.Elements[3],
+		Elements[4] + _rhs.Elements[4], Elements[5] + _rhs.Elements[5], Elements[6] + _rhs.Elements[6], Elements[7] + _rhs.Elements[7],
+		Elements[8] + _rhs.Elements[8], Elements[9] + _rhs.Elements[9], Elements[10] + _rhs.Elements[10], Elements[11] + _rhs.Elements[11],
+		Elements[12] + _rhs.Elements[12], Elements[13] + _rhs.Elements[13], Elements[14] + _rhs.Elements[14], Elements[15] + _rhs.Elements[15]
 		);
 }
 
@@ -190,10 +192,10 @@ template<typename Real>
 Matrix<Real> Matrix<Real>::operator- (const Matrix<Real>& _rhs) const
 {
 	return Matrix<Real>(
-		m_Elements[0] - _rhs.m_Elements[0], m_Elements[1] - _rhs.m_Elements[1], m_Elements[2] - _rhs.m_Elements[2], m_Elements[3] - _rhs.m_Elements[3],
-		m_Elements[4] - _rhs.m_Elements[4], m_Elements[5] - _rhs.m_Elements[5], m_Elements[6] - _rhs.m_Elements[6], m_Elements[7] - _rhs.m_Elements[7],
-		m_Elements[8] - _rhs.m_Elements[8], m_Elements[9] - _rhs.m_Elements[9], m_Elements[10] - _rhs.m_Elements[10], m_Elements[11] - _rhs.m_Elements[11],
-		m_Elements[12] - _rhs.m_Elements[12], m_Elements[13] - _rhs.m_Elements[13], m_Elements[14] - _rhs.m_Elements[14], m_Elements[15] - _rhs.m_Elements[15]
+		Elements[0] - _rhs.Elements[0], Elements[1] - _rhs.Elements[1], Elements[2] - _rhs.Elements[2], Elements[3] - _rhs.Elements[3],
+		Elements[4] - _rhs.Elements[4], Elements[5] - _rhs.Elements[5], Elements[6] - _rhs.Elements[6], Elements[7] - _rhs.Elements[7],
+		Elements[8] - _rhs.Elements[8], Elements[9] - _rhs.Elements[9], Elements[10] - _rhs.Elements[10], Elements[11] - _rhs.Elements[11],
+		Elements[12] - _rhs.Elements[12], Elements[13] - _rhs.Elements[13], Elements[14] - _rhs.Elements[14], Elements[15] - _rhs.Elements[15]
 		);
 }
 
@@ -201,10 +203,10 @@ template<typename Real>
 Matrix<Real> Matrix<Real>::operator* (Real _scalar) const
 {
 	return Matrix<Real>(
-		_scalar*m_Elements[0], _scalar*m_Elements[1], _scalar*m_Elements[2], _scalar*m_Elements[3],
-		_scalar*m_Elements[4], _scalar*m_Elements[5], _scalar*m_Elements[6], _scalar*m_Elements[7],
-		_scalar*m_Elements[8], _scalar*m_Elements[9], _scalar*m_Elements[10], _scalar*m_Elements[11],
-		_scalar*m_Elements[12], _scalar*m_Elements[13], _scalar*m_Elements[14], _scalar*m_Elements[15]
+		_scalar*Elements[0], _scalar*Elements[1], _scalar*Elements[2], _scalar*Elements[3],
+		_scalar*Elements[4], _scalar*Elements[5], _scalar*Elements[6], _scalar*Elements[7],
+		_scalar*Elements[8], _scalar*Elements[9], _scalar*Elements[10], _scalar*Elements[11],
+		_scalar*Elements[12], _scalar*Elements[13], _scalar*Elements[14], _scalar*Elements[15]
 		);
 }
 
@@ -213,29 +215,29 @@ Matrix<Real> Matrix<Real>::operator/ (Real _scalar) const
 {
 	Real InvScalar = ((Real)1.0) / _scalar;
 	return Matrix<Real>(
-		InvScalar*m_Elements[0], InvScalar*m_Elements[1], InvScalar*m_Elements[2], InvScalar*m_Elements[3],
-		InvScalar*m_Elements[4], InvScalar*m_Elements[5], InvScalar*m_Elements[6], InvScalar*m_Elements[7],
-		InvScalar*m_Elements[8], InvScalar*m_Elements[9], InvScalar*m_Elements[10],InvScalar*m_Elements[11],
-		InvScalar*m_Elements[12], InvScalar*m_Elements[13], InvScalar*m_Elements[14],InvScalar*m_Elements[15]
+		InvScalar*Elements[0], InvScalar*Elements[1], InvScalar*Elements[2], InvScalar*Elements[3],
+		InvScalar*Elements[4], InvScalar*Elements[5], InvScalar*Elements[6], InvScalar*Elements[7],
+		InvScalar*Elements[8], InvScalar*Elements[9], InvScalar*Elements[10],InvScalar*Elements[11],
+		InvScalar*Elements[12], InvScalar*Elements[13], InvScalar*Elements[14],InvScalar*Elements[15]
 		);
 }
 
 template<typename Real>
 Matrix<Real> Matrix<Real>::operator- () const
 {
-	return Matrix<Real>(-m_Elements[0], -m_Elements[1], -m_Elements[2], -m_Elements[3],
-						-m_Elements[4], -m_Elements[5], -m_Elements[6], -m_Elements[7],
-						-m_Elements[8], -m_Elements[9], -m_Elements[10], -m_Elements[11],
-						-m_Elements[12], -m_Elements[13], -m_Elements[14], -m_Elements[15]);
+	return Matrix<Real>(-Elements[0], -Elements[1], -Elements[2], -Elements[3],
+						-Elements[4], -Elements[5], -Elements[6], -Elements[7],
+						-Elements[8], -Elements[9], -Elements[10], -Elements[11],
+						-Elements[12], -Elements[13], -Elements[14], -Elements[15]);
 }
 
 template<typename Real>
 Matrix<Real>& Matrix<Real>::operator+= (const Matrix<Real>& _rhs)
 {
-	m_Elements[0] += _rhs.m_Elements[0]; m_Elements[1] += _rhs.m_Elements[1]; m_Elements[2] += _rhs.m_Elements[2]; m_Elements[3] += _rhs.m_Elements[3];
-	m_Elements[4] += _rhs.m_Elements[4]; m_Elements[5] += _rhs.m_Elements[5]; m_Elements[6] += _rhs.m_Elements[6]; m_Elements[7] += _rhs.m_Elements[7];
-	m_Elements[8] += _rhs.m_Elements[8]; m_Elements[9] += _rhs.m_Elements[9]; m_Elements[10] += _rhs.m_Elements[10]; m_Elements[11] += _rhs.m_Elements[11];
-	m_Elements[12] += _rhs.m_Elements[12]; m_Elements[13] += _rhs.m_Elements[13]; m_Elements[14] += _rhs.m_Elements[14]; m_Elements[15] += _rhs.m_Elements[15];
+	Elements[0] += _rhs.Elements[0]; Elements[1] += _rhs.Elements[1]; Elements[2] += _rhs.Elements[2]; Elements[3] += _rhs.Elements[3];
+	Elements[4] += _rhs.Elements[4]; Elements[5] += _rhs.Elements[5]; Elements[6] += _rhs.Elements[6]; Elements[7] += _rhs.Elements[7];
+	Elements[8] += _rhs.Elements[8]; Elements[9] += _rhs.Elements[9]; Elements[10] += _rhs.Elements[10]; Elements[11] += _rhs.Elements[11];
+	Elements[12] += _rhs.Elements[12]; Elements[13] += _rhs.Elements[13]; Elements[14] += _rhs.Elements[14]; Elements[15] += _rhs.Elements[15];
 	
 	return *this;
 }
@@ -243,10 +245,10 @@ Matrix<Real>& Matrix<Real>::operator+= (const Matrix<Real>& _rhs)
 template<typename Real>
 Matrix<Real>& Matrix<Real>::operator-= (const Matrix<Real>& _rhs)
 {
-	m_Elements[0] -= _rhs.m_Elements[0]; m_Elements[1] -= _rhs.m_Elements[1]; m_Elements[2] -= _rhs.m_Elements[2]; m_Elements[3] -= _rhs.m_Elements[3];
-	m_Elements[4] -= _rhs.m_Elements[4]; m_Elements[5] -= _rhs.m_Elements[5]; m_Elements[6] -= _rhs.m_Elements[6]; m_Elements[7] -= _rhs.m_Elements[7];
-	m_Elements[8] -= _rhs.m_Elements[8]; m_Elements[9] -= _rhs.m_Elements[9]; m_Elements[10] -= _rhs.m_Elements[10]; m_Elements[11] -= _rhs.m_Elements[11];
-	m_Elements[12] -= _rhs.m_Elements[12]; m_Elements[13] -= _rhs.m_Elements[13]; m_Elements[14] -= _rhs.m_Elements[14]; m_Elements[15] -= _rhs.m_Elements[15];
+	Elements[0] -= _rhs.Elements[0]; Elements[1] -= _rhs.Elements[1]; Elements[2] -= _rhs.Elements[2]; Elements[3] -= _rhs.Elements[3];
+	Elements[4] -= _rhs.Elements[4]; Elements[5] -= _rhs.Elements[5]; Elements[6] -= _rhs.Elements[6]; Elements[7] -= _rhs.Elements[7];
+	Elements[8] -= _rhs.Elements[8]; Elements[9] -= _rhs.Elements[9]; Elements[10] -= _rhs.Elements[10]; Elements[11] -= _rhs.Elements[11];
+	Elements[12] -= _rhs.Elements[12]; Elements[13] -= _rhs.Elements[13]; Elements[14] -= _rhs.Elements[14]; Elements[15] -= _rhs.Elements[15];
 	
 	return *this;
 }
@@ -254,10 +256,10 @@ Matrix<Real>& Matrix<Real>::operator-= (const Matrix<Real>& _rhs)
 template<typename Real>
 Matrix<Real>& Matrix<Real>::operator*= (Real _scalar)
 {
-	m_Elements[0] *= _scalar; m_Elements[1] *= _scalar; m_Elements[2] *= _scalar; m_Elements[3] *= _scalar;
-	m_Elements[4] *= _scalar; m_Elements[5] *= _scalar; m_Elements[6] *= _scalar; m_Elements[7] *= _scalar;
-	m_Elements[8] *= _scalar; m_Elements[9] *= _scalar; m_Elements[10] *= _scalar; m_Elements[11] *= _scalar;
-	m_Elements[12] *= _scalar; m_Elements[13] *= _scalar; m_Elements[14] *= _scalar; m_Elements[15] *= _scalar;
+	Elements[0] *= _scalar; Elements[1] *= _scalar; Elements[2] *= _scalar; Elements[3] *= _scalar;
+	Elements[4] *= _scalar; Elements[5] *= _scalar; Elements[6] *= _scalar; Elements[7] *= _scalar;
+	Elements[8] *= _scalar; Elements[9] *= _scalar; Elements[10] *= _scalar; Elements[11] *= _scalar;
+	Elements[12] *= _scalar; Elements[13] *= _scalar; Elements[14] *= _scalar; Elements[15] *= _scalar;
 	return *this;
 }
 
@@ -265,10 +267,10 @@ template<typename Real>
 Matrix<Real>& Matrix<Real>::operator/= (Real _scalar)
 {
 	Real InvScalar = ((Real)1.0) / _scalar;
-	m_Elements[0] *= InvScalar; m_Elements[1] *= InvScalar; m_Elements[2] *= InvScalar; m_Elements[3] *= InvScalar;
-	m_Elements[4] *= InvScalar; m_Elements[5] *= InvScalar; m_Elements[6] *= InvScalar; m_Elements[7] *= InvScalar;
-	m_Elements[8] *= InvScalar; m_Elements[9] *= InvScalar; m_Elements[10] *= InvScalar; m_Elements[11] *= InvScalar;
-	m_Elements[12] *= InvScalar; m_Elements[13] *= InvScalar; m_Elements[14] *= InvScalar; m_Elements[15] *= InvScalar;
+	Elements[0] *= InvScalar; Elements[1] *= InvScalar; Elements[2] *= InvScalar; Elements[3] *= InvScalar;
+	Elements[4] *= InvScalar; Elements[5] *= InvScalar; Elements[6] *= InvScalar; Elements[7] *= InvScalar;
+	Elements[8] *= InvScalar; Elements[9] *= InvScalar; Elements[10] *= InvScalar; Elements[11] *= InvScalar;
+	Elements[12] *= InvScalar; Elements[13] *= InvScalar; Elements[14] *= InvScalar; Elements[15] *= InvScalar;
 
 	return *this;
 }

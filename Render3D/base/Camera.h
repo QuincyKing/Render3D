@@ -34,7 +34,7 @@ namespace Base3D
 
 		bool dirty;
 		PROJECTION projection;
-		bool main;
+		bool mainCamera;
 
 		float aspect;
 
@@ -46,7 +46,7 @@ namespace Base3D
 			worldup = _camera.worldup;  fovy = _camera.fovy;  top = _camera.top;
 			viewMatrix = _camera.viewMatrix;  zNear = _camera.zNear;  dirty = _camera.dirty;
 			projectionMatrix = _camera.projectionMatrix; zFar = _camera.zFar; projection = _camera.projection;
-			viewMatrixR = _camera.viewMatrixR;  left = _camera.left; main = _camera.main;
+			viewMatrixR = _camera.viewMatrixR;  left = _camera.left; mainCamera = _camera.mainCamera;
 		}
 
 

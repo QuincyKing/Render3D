@@ -3,7 +3,7 @@
 
 namespace Render3D
 {
-	void Raster::Init(Raster _raster)
+	void Raster::Init()
 	{
 		renderState = RENDER_STATE_TEXTURE;
 		background = 0x0c0c0c;
@@ -229,8 +229,8 @@ namespace Render3D
 			float dot = Dot(tempNormal, camera->front);
 			if (dot > 0)
 			{
-				float bias = 0.015 * (1.0 - dot);
-				if (bias < 0.002f) bias = 0.001;
+				float bias = 0.015f * (1.0f - dot);
+				if (bias < 0.002f) bias = 0.001f;
 				if (y >= 0 && x >= 0 && y < camera->height && x < camera->width)
 				{
 					float shadow = 0.0;
@@ -241,10 +241,10 @@ namespace Render3D
 							if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width)
 								continue;
 							float pcfDepth = pShadowBuffer[(y + j) * camera->width + (x + i)];
-							shadow += tempPos.Z() - bias > pcfDepth ? 1.0 : 0.0;
+							shadow += tempPos.Z() - bias > pcfDepth ? 1.0f : 0.0f;
 						}
 					}
-					shadow /= 9.0;
+					shadow /= 9.0f;
 
 					Base3D::Color temp = { 0.3f, 0.3f, 0.3f, 0.3f };
 					temp = temp * shadow;
@@ -254,8 +254,8 @@ namespace Render3D
 		}
 
 
-		int i = 0;
-		for (i = 0; i < pointLights.size(); i++)
+		uint32_t i = 0;
+		for (; i < pointLights.size(); i++)
 		{
 			temp = Base3D::Color(0.0f, 0.0f, 0.0f, 1.0f);
 			Base3D::PointLight pointlight = pointLights[i];
@@ -606,7 +606,7 @@ namespace Render3D
 		}
 
 
-		z_factor_y = tan(camera.fovy*0.5);
+		z_factor_y = tan(camera.fovy*0.5f);
 		z_factor_x = z_factor_y / camera.aspect;
 		z_factor = z_factor_x;
 		z_test = z_factor * p1.pos.Z();

@@ -12,7 +12,7 @@ namespace Base3D
 		return color;
 	}
 
-	Color& Color::operator =(Color &_color)
+	Color& Color::operator =(const Color &_color)
 	{
 		this->r = _color.r;
 		this->g = _color.g;

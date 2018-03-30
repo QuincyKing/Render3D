@@ -24,6 +24,7 @@ THE SOFTWARE.
 #ifndef TINOBJ_LOADER_C_H_
 #define TINOBJ_LOADER_C_H_
 
+
 /* @todo { Remoe stdlib dependency. size_t? } */
 #include <stdlib.h>
 
@@ -99,10 +100,10 @@ extern int tinyobj_parse_mtl_file(tinyobj_material_t **materials_out,
                                   size_t *num_materials_out,
                                   const char *filename);
 
-extern void tinyobj_attrib_init(tinyobj_attrib_t *attrib);
-extern void tinyobj_attrib_free(tinyobj_attrib_t *attrib);
-extern void tinyobj_shapes_free(tinyobj_shape_t *shapes, size_t num_shapes);
-extern void tinyobj_materials_free(tinyobj_material_t *materials,
+static void tinyobj_attrib_init(tinyobj_attrib_t *attrib);
+static void tinyobj_attrib_free(tinyobj_attrib_t *attrib);
+static void tinyobj_shapes_free(tinyobj_shape_t *shapes, size_t num_shapes);
+static void tinyobj_materials_free(tinyobj_material_t *materials,
                                    size_t num_materials);
 
 #define TINYOBJ_LOADER_C_IMPLEMENTATION
@@ -485,7 +486,7 @@ static tinyobj_material_t *tinyobj_material_add(tinyobj_material_t *prev,
   return dst;
 }
 
-int tinyobj_parse_mtl_file(tinyobj_material_t **materials_out,
+static int tinyobj_parse_mtl_file(tinyobj_material_t **materials_out,
                                   size_t *num_materials_out,
                                   const char *filename) {
   tinyobj_material_t material;
@@ -961,7 +962,7 @@ static int is_line_ending(const char *p, size_t i, size_t end_i) {
   return 0;
 }
 
-int tinyobj_parse_obj(tinyobj_attrib_t *attrib, tinyobj_shape_t **shapes,
+ static int tinyobj_parse_obj(tinyobj_attrib_t *attrib, tinyobj_shape_t **shapes,
                       size_t *num_shapes, tinyobj_material_t **materials_out,
                       size_t *num_materials_out, const char *buf, size_t len,
                       unsigned int flags, const char *prefix_path) {
@@ -1173,7 +1174,7 @@ int tinyobj_parse_obj(tinyobj_attrib_t *attrib, tinyobj_shape_t **shapes,
     /* Allocate array of shapes with maximum possible size(+1 for unnamed
      * group/object).
      * Actual # of shapes found in .obj is determined in the later */
-    (*shapes) = malloc(sizeof(tinyobj_shape_t) * (n + 1));
+    (*shapes) = (tinyobj_shape_t *)malloc(sizeof(tinyobj_shape_t) * (n + 1));
 
     for (i = 0; i < num_lines; i++) {
       if (commands[i].type == COMMAND_O || commands[i].type == COMMAND_G) {
@@ -1288,7 +1289,7 @@ void tinyobj_shapes_free(tinyobj_shape_t *shapes, size_t num_shapes) {
   free(shapes);
 }
 
-void tinyobj_materials_free(tinyobj_material_t *materials,
+static void tinyobj_materials_free(tinyobj_material_t *materials,
                             size_t num_materials) {
   size_t i;
   if (materials == NULL) return;

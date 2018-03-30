@@ -9,6 +9,7 @@
 */
 #pragma once
 
+#include <cassert>
 namespace Math3D
 {
 	template<typename Real, int size>
@@ -71,7 +72,7 @@ namespace Math3D
 	template<typename Real, int size>
 	Vector<Real, size>::Vector(Real _realX, Real _realY, Real _realZ)
 	{
-		static_assert(size == 3, "ÏòÁ¿Î¬¶È´íÎó");
+		assert(size == 3);
 
 		m_Tuple[0] = _realX;
 		m_Tuple[1] = _realY;
