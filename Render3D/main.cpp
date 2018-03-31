@@ -23,13 +23,13 @@
 #pragma comment(lib, "libpng16.lib")
 #pragma comment(lib, "zlib.lib")
 
-extern std::vector<Base3D::Material> materials;
-extern Base3D::DirLight dirLight;
-extern std::vector<Base3D::PointLight> pointLights;
-extern std::vector<Base3D::Camera> cameras;
-extern std::vector<Base3D::Object> objs;
-extern std::vector<Base3D::Texture> textures;
-extern float *pShadowBuffer;
+std::vector<Base3D::Material> materials;
+Base3D::DirLight dirLight;
+std::vector<Base3D::PointLight> pointLights;
+std::vector<Base3D::Camera> cameras;
+std::vector<Base3D::Object> objs;
+std::vector<Base3D::Texture> textures;
+float *pShadowBuffer;
 
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 600;

@@ -50,7 +50,7 @@ int MakeMeshAndMaterialByObj(Render3D::Vertex **mesh, unsigned long &mesh_num, i
 	size_t data_len;
 	char * buffer;
 	size_t result;
-	const char *path = GetFilePath(name, "obj");
+	const char *path = getFilePath(name, "obj");
 	pFile = fopen(path, "r");
 	fseek(pFile, 0, SEEK_END);
 	lSize = ftell(pFile);
@@ -403,7 +403,7 @@ int LoadPngImage(const char *name, unsigned int **bits, unsigned int &width, uns
 	char buf[PNG_BYTES_TO_CHECK];
 	int w, h, x, y, temp, color_type;
 
-	fp = fopen(GetFilePath(name, "png"), "rb");
+	fp = fopen(getFilePath(name, "png"), "rb");
 	if (fp == NULL)
 	{
 		return 1; /* ·µ»ØÖµ */

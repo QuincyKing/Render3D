@@ -25,6 +25,7 @@
 #include "../base\Light\PointLight.h"
 #include "../base/Texture.h"
 #include "../utils/Utils.h"
+#include "../base/Object.h"
 #include "Transform.h"
 #include "Primitive.h"
 
@@ -32,6 +33,14 @@
 #define RENDER_STATE_WIREFRAME      1		// ‰÷»æœﬂøÚ
 #define RENDER_STATE_TEXTURE        2		// ‰÷»æŒ∆¿Ì
 #define RENDER_STATE_COLOR          4		// ‰÷»æ—’…´
+
+extern std::vector<Base3D::Material> materials;
+extern Base3D::DirLight dirLight;
+extern std::vector<Base3D::PointLight> pointLights;
+extern std::vector<Base3D::Camera> cameras;
+extern std::vector<Base3D::Object> objs;
+extern std::vector<Base3D::Texture> textures;
+extern float *pShadowBuffer;
 
 namespace Render3D
 {

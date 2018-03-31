@@ -170,12 +170,6 @@ namespace Render3D
 		vf.storage2 = { av.tangent.Z(), av.binormal.Z(), av.normal.Z() };
 	}
 
-	Base3D::DirLight dirLight;
-	std::vector<Base3D::Texture> textures;
-	std::vector<Base3D::Camera> cameras;
-	float *pShadowBuffer;
-	std::vector<Base3D::PointLight> pointLights;
-
 	void Raster::FragShader(Base3D::v2f &vf, Base3D::Color &color)
 	{
 		Base3D::Material material = this->material;
