@@ -7,6 +7,17 @@
 
 namespace Utils3D
 {
+const char* getFilePath(const char* name, const char* type) 
+{
+	static char path[100];
+	if (strcmp(type, "png") == 0)
+		sprintf(path, "./image/%s.%s", name, type);
+	else if (strcmp(type, "obj") == 0)
+		sprintf(path, "./obj/%s.%s", name, type);
+	char *p = path;
+	return p;
+}
+
 void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3])
 {
 	float v10[3];
@@ -33,8 +44,6 @@ void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3])
 		N[1] /= len;
 	}
 }
-
-std::vector<Base3D::Material> materials;
 
 int MakeMeshAndMaterialByObj(Render3D::Vertex **mesh, unsigned long &mesh_num, int **materialIds, unsigned long &materialIdsNum, const char *name)
 {
@@ -138,37 +147,44 @@ int MakeMeshAndMaterialByObj(Render3D::Vertex **mesh, unsigned long &mesh_num, i
 			m.displacementTexname = NULL;
 			m.alphaTexname = NULL;
 
-			if (tm.ambient_texname != NULL) {
+			if (tm.ambient_texname != NULL)
+			{
 				m.ambientTexname = (char*)malloc(sizeof(char) * (strlen(tm.ambient_texname) + 1));
 				strcpy(m.ambientTexname, tm.ambient_texname);
 				m.ambientTexId = MakeTextureByPng(m.ambientTexname, true);
 			}
-			if (tm.diffuse_texname != NULL) {
+			if (tm.diffuse_texname != NULL) 
+			{
 				m.diffuseTexname = (char*)malloc(sizeof(char) * (strlen(tm.diffuse_texname) + 1));
 				strcpy(m.diffuseTexname, tm.diffuse_texname);
 				m.diffuseTexId = MakeTextureByPng(m.diffuseTexname, true);
 			}
-			if (tm.specular_texname != NULL) {
+			if (tm.specular_texname != NULL)
+			{
 				m.specularTexname = (char*)malloc(sizeof(char) * (strlen(tm.specular_texname) + 1));
 				strcpy(m.specularTexname, tm.specular_texname);
 				m.specularTexId = MakeTextureByPng(m.specularTexname, true);
 			}
-			if (tm.specular_highlight_texname != NULL) {
+			if (tm.specular_highlight_texname != NULL) 
+			{
 				m.specularHighlightTexname = (char*)malloc(sizeof(char) * (strlen(tm.specular_highlight_texname) + 1));
 				strcpy(m.specularHighlightTexname, tm.specular_highlight_texname);
 				m.specularHighlightTexId = MakeTextureByPng(m.specularHighlightTexname, true);
 			}
-			if (tm.bump_texname != NULL) {
+			if (tm.bump_texname != NULL)
+			{
 				m.bumpTexname = (char*)malloc(sizeof(char) * (strlen(tm.bump_texname) + 1));
 				strcpy(m.bumpTexname, tm.bump_texname);
 				m.bumpTexId = MakeTextureByPng(m.bumpTexname, true);
 			}
-			if (tm.displacement_texname != NULL) {
+			if (tm.displacement_texname != NULL) 
+			{
 				m.displacementTexname = (char*)malloc(sizeof(char) * (strlen(tm.displacement_texname) + 1));
 				strcpy(m.displacementTexname, tm.displacement_texname);
 				m.displacementTexId = MakeTextureByPng(m.displacementTexname, true);
 			}
-			if (tm.alpha_texname != NULL) {
+			if (tm.alpha_texname != NULL) 
+			{
 				m.alphaTexname = (char*)malloc(sizeof(char) * (strlen(tm.alpha_texname) + 1));
 				strcpy(m.alphaTexname, tm.alpha_texname);
 				m.alphaTexId = MakeTextureByPng(m.alphaTexname, true);
@@ -490,7 +506,6 @@ int LoadPngImage(const char *name, unsigned int **bits, unsigned int &width, uns
 	return 0;
 }
 
-std::vector<Base3D::Texture> textures;
 // ∑µªÿ-1∂¡»° ß∞‹£¨∑µªÿid∫≈∂‘”¶texture±‡∫≈
 int MakeTextureByPng(const char *name, bool mipmap)
 {

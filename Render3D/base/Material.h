@@ -52,16 +52,16 @@ namespace Base3D
 		char *alphaTexname;              /* map_d */
 		int alphaTexId;
 
-		~Material()
-		{
-			free(this->name);
-			free(this->alphaTexname);
-			free(this->displacementTexname);
-			free(this->bumpTexname);
-			free(this->specularHighlightTexname);
-			free(this->specularTexname);
-			free(this->ambientTexname);
-			free(this->diffuseTexname);
-		}
+		//~Material()
+		//{
+		//	//free(this->name);
+		//	free(this->alphaTexname);
+		//	free(this->displacementTexname);
+		//	free(this->bumpTexname);
+		//	free(this->specularHighlightTexname);
+		//	free(this->specularTexname);
+		//	free(this->ambientTexname);
+		//	free(this->diffuseTexname);
+		//}
 	};
 }

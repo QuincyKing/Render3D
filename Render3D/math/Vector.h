@@ -63,7 +63,7 @@ namespace Math3D
 	template<typename Real, int size>
 	Vector<Real, size>::Vector(Real _realX, Real _realY)
 	{
-		static_assert(size == 2, "向量维度错误");
+		static_assert(size >= 2, "向量维度错误");
 
 		m_Tuple[0] = _realX;
 		m_Tuple[1] = _realY;
@@ -72,7 +72,7 @@ namespace Math3D
 	template<typename Real, int size>
 	Vector<Real, size>::Vector(Real _realX, Real _realY, Real _realZ)
 	{
-		assert(size == 3);
+		assert(size >= 3);
 
 		m_Tuple[0] = _realX;
 		m_Tuple[1] = _realY;
