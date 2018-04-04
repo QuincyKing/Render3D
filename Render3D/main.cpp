@@ -13,6 +13,7 @@
 #include "base\Texture.h"
 #include "SDL.h"
 #include "utils\Utils.h"
+#include <iostream>
 
 #include <stdio.h>
 #include <vector>
@@ -221,7 +222,9 @@ void DrawObject(Render3D::Raster &device, std::vector<Base3D::Object> &objects)
 		{
 			// 切换材质组
 			if (object->materialIds == NULL)
+			{
 				device.material = materials[0];
+			}
 			else
 				device.material = materials[object->materialIds[i / 3]];
 			device.ClipPolys(mesh[i], mesh[i + 1], mesh[i + 2], false);
@@ -282,8 +285,8 @@ int main(int argc, char * argv[])
 
 		memset(screen_keys, 0, sizeof(int) * 512);
 
-		dirLight = Base3D::DirLight(Math3D::Vector4(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), false);
-		dirLight = Base3D::DirLight(Math3D::Vector4(0.0f, -1.0f, 1.0f, 0.0f), Base3D::Color(0.3f, 0.3f, 0.3f, 1.0f), Base3D::Color(0.8f, 0.8f, 0.8f, 1.0f), Base3D::Color(0.3f, 0.3f, 0.3f, 1.0f), true);
+		//dirLight = Base3D::DirLight(Math3D::Vector4(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), Base3D::Color(0.0f, 0.0f, 0.0f, 0.0f), false);
+		dirLight = Base3D::DirLight(Math3D::Vector4(0.0f, -1.0f, 1.0f, 0.0f), Base3D::Color(0.3f, 0.3f, 0.3f, 1.0f), Base3D::Color(0.8f, 0.8f, 0.8f, 1.0f), Base3D::Color(0.3f, 0.3f, 0.3f, 1.0f), false);
 		if (dirLight.shadow == true)
 		{
 			// 影子摄像机
@@ -307,14 +310,12 @@ int main(int argc, char * argv[])
 			camera.InitProjection();
 			cameras.push_back(camera);
 		}
-		pointLights.push_back(
+		/*pointLights.push_back(
 			Base3D::PointLight(Math3D::Vector4(0.0f, 6.0f, -1.0f, 1.0f), 1.0f, 0.09f, 0.032f, Base3D::Color(0.6f, 0.6f, 0.6f, 1.0f), Base3D::Color(0.8f, 0.8f, 0.8f, 1.0f), Base3D::Color(0.7f, 0.7f, 0.7f, 1.0f), false)
-			);
+			);*/
 		pointLights.push_back(
 			Base3D::PointLight(Math3D::Vector4(0.0f, 6.0f, 2.0f, 1.0f), 1.0f, 0.09f, 0.032f, Base3D::Color(0.6f, 0.6f, 0.6f, 1.0f), Base3D::Color(0.8f, 0.8f, 0.8f, 1.0f), Base3D::Color(0.6f, 0.6f, 0.6f, 1.0f), false)
             );
-		//        pointLights[pointlight_cnt++] = (pointlight_t){{0.0f, 6.0f, -1.0f, 1.0f}, 1.0f, 0.09f, 0.032f, {0.6f, 0.6f, 0.6f, 1.0f}, {0.8f, 0.8f, 0.8f, 1.0f}, {0.3f, 0.3f, 0.3f, 1.0f}, false};
-		//        pointLights[pointlight_cnt++] = (pointlight_t){{0.0f, 6.0f, -1.0f, 1.0f}, 1.0f, 0.09f, 0.032f, {0.6f, 0.6f, 0.6f, 1.0f}, {0.8f, 0.8f, 0.8f, 1.0f}, {0.3f, 0.3f, 0.3f, 1.0f}, false};
 
 		// 主摄像机
 		Base3D::Camera camera;
@@ -341,14 +342,14 @@ int main(int argc, char * argv[])
 		device.SetZBuffer(zbuffer);
 		device.SetShadowBuffer(shadowbuffer);
 
-		device.SetBackground(0x55555555);
+		device.SetBackground(0xfffffff);
 
 		device.SetCamera(camera);
 		device.transform.Update();
 
 		// init object
 		// ground
-		Base3D::Object ground;
+		/*Base3D::Object ground;
 		ground.pos = Render3D::Point(0, 0, 0, 1);
 		ground.scale = Math3D::Vector4(20, 1, 20, 0);
 		ground.axis = Math3D::Vector4(0, 0, 0, 1);
@@ -359,9 +360,9 @@ int main(int argc, char * argv[])
 		ground.textureId = 1;
 		ground.shadow = false;
 		ground.dirty = true;
-		objs.push_back(ground);
+		objs.push_back(ground);*/
 
-		Base3D::Object box;
+		/*Base3D::Object box;
 		box.pos = Render3D::Point(-1, 0, 0, 1);
 		box.scale = Math3D::Vector4(0.1f, 0.1f, 0.1f, 0);
 		box.axis = Math3D::Vector4(0, 1, 0, 1);
@@ -371,15 +372,15 @@ int main(int argc, char * argv[])
 		box.materialIds = material_ids_nan;
 		box.textureId = 1;
 		box.shadow = true;
-		box.dirty = true;
-		objs.push_back(box);
+		box.dirty = true;*/
+		//objs.push_back(box);
 		// box
 		
 
 		// box
 		Base3D::Object box1;
-		box1.pos = Render3D::Point(0, 2, -1, 1);
-		box1.scale = Math3D::Vector4(0.5, 0.5, 0.5, 0);
+		box1.pos = Render3D::Point(0, 2, 10, 1);
+		box1.scale = Math3D::Vector4(1, 1, 1, 0);
 		box1.axis = Math3D::Vector4(1, 0, 1, 1);
 		box1.theta = 0.0f;
 		box1.mesh = box_mesh;
@@ -542,8 +543,8 @@ int main(int argc, char * argv[])
 			}
 
 			// box auto rotate
-			box.theta -= 0.04f;
-			box.dirty = true;
+			/*box.theta -= 0.04f;
+			box.dirty = true;*/
 
 			// box auto rotate
 			box1.theta += 0.04f;
@@ -606,6 +607,7 @@ int main(int argc, char * argv[])
 			//Update screen
 			SDL_RenderPresent(gRenderer);
 		}
+
 		free(mesh_nan);
 		free(material_ids_nan);
 		FreeTextures();

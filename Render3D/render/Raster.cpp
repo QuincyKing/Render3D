@@ -165,9 +165,9 @@ namespace Render3D
 		vf.color = av.color;
 		vf.texcoord = av.texcoord;
 
-		vf.storage0 = { av.tangent.X(), av.binormal.X(), av.normal.X() };
-		vf.storage1 = { av.tangent.Y(), av.binormal.Y(), av.normal.Y() };
-		vf.storage2 = { av.tangent.Z(), av.binormal.Z(), av.normal.Z() };
+		vf.storage0 = { av.tangent.X(), av.binormal.X(), av.normal.X(), 0.0f};
+		vf.storage1 = { av.tangent.Y(), av.binormal.Y(), av.normal.Y(), 0.0f };
+		vf.storage2 = { av.tangent.Z(), av.binormal.Z(), av.normal.Z(), 0.0f };
 	}
 
 	void Raster::FragShader(Base3D::v2f &vf, Base3D::Color &color)
@@ -435,7 +435,7 @@ namespace Render3D
 		}
 	}
 
-	void CalculateTangentAndBinormal(Vector4 &tangent, Vector4 &binormal, const Vector4 &position1, const Vector4 &position2, const Vector4 &position3,
+	void CalculateTangentAndBinormal(Vector4 &normal , Vector4 &tangent, Vector4 &binormal, const Vector4 &position1, const Vector4 &position2, const Vector4 &position3,
 		float u1, float v1, float u2, float v2, float u3, float v3)
 	{
 		//side0 is the vector along one side of the triangle of vertices passed in,
@@ -446,9 +446,10 @@ namespace Render3D
 		side1 = position3 - position1;
 
 		//Calculate face normal
-		Vector4 normal(0.0f, 0.0f, 0.0f, 0.0f);
-		normal = Cross(side1, side0);
-		Normalize(normal);
+		Vector4 _normal(0.0f, 0.0f, 0.0f, 0.0f);
+		_normal = Cross(side1, side0);
+		Normalize(_normal);
+		normal = _normal;
 		//Now we use a formula to calculate the tangent.
 		float deltaV0 = v1 - v2;
 		float deltaV1 = v3 - v1;
@@ -503,11 +504,12 @@ namespace Render3D
 			if (i == 0) a = 1, b = 2;
 			if (i == 1) a = 0, b = 2;
 			if (i == 2) a = 0, b = 1;
-			CalculateTangentAndBinormal(av->tangent, av->binormal, vertex->pos, vertice[a].pos, vertice[b].pos, vertex->tc.u, vertex->tc.v, vertice[a].tc.u, vertice[a].tc.v, vertice[b].tc.u, vertice[b].tc.v);
+			CalculateTangentAndBinormal(av->normal, av->tangent, av->binormal, vertex->pos, vertice[a].pos, vertice[b].pos, vertex->tc.u, vertex->tc.v, vertice[a].tc.u, vertice[a].tc.v, vertice[b].tc.u, vertice[b].tc.v);
 
 			av->tangent = av->tangent * transform.model;
 			av->binormal = Cross(av->normal, av->tangent);
-			av->binormal = av->binormal * av->tangent.W();
+			if (av->tangent.W() == -1)
+				av->binormal = av->binormal * av->tangent.W();
 			vertex->pos = vertex->pos * transform.vp;
 			points[i] = vertex->pos; // 透视空间的pos
 
@@ -524,29 +526,31 @@ namespace Render3D
 		}
 
 		// 背面剔除
-		if (cull > 0) 
-		{
-			Vector4 t21, t32;
-			t21 = t2.pos - t1.pos;
-			t32 = t3.pos - t2.pos;
-			if (cull == 1) 
-			{
-				if (t21.X() * t32.Y() - t32.X() * t21.Y() <= 0)    // 计算叉积
-					return;
-			}
-			else if (cull == 2) 
-			{
-				if (t21.X() * t32.Y() - t32.X() * t21.Y() > 0)     // 计算叉积
-					return;
-			}
-		}
+		//if (cull > 0) 
+		//{
+		//	Vector4 t21, t32;
+		//	t21 = t2.pos - t1.pos;
+		//	t32 = t3.pos - t2.pos;
+		//	if (cull == 1) 
+		//	{
+		//		if (t21.X() * t32.Y() - t32.X() * t21.Y() <= 0)    // 计算叉积
+		//			return;
+		//	}
+		//	else if (cull == 2) 
+		//	{
+		//		if (t21.X() * t32.Y() - t32.X() * t21.Y() > 0)     // 计算叉积
+		//			return;
+		//	}
+		//}
 
-		if (renderState & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR)) 
+		if ((renderState & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR)) > 0) 
 		{
 			Trapezoids traps;
 			traps.InitTriangle(t1, t2, t3);
-			if (traps.count >= 1) RenderTrap(traps[0], points, v2fs);
-			if (traps.count >= 2) RenderTrap(traps[1], points, v2fs);
+			if (traps.count >= 1) 
+				RenderTrap(traps[0], points, v2fs);
+			if (traps.count >= 2) 
+				RenderTrap(traps[1], points, v2fs);
 		}
 
 		if ((renderState & RENDER_STATE_WIREFRAME) && frameBuffer != NULL) 

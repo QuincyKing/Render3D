@@ -8,6 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <cassert>
+#include <cstring>
 #include "png.h"
 #include "tinyobj_loader_c.h"
 #include "../base/Material.h"

@@ -153,7 +153,7 @@ namespace Render3D
 	* @param Vertex p2
 	* @param Vertex p3
 	*/
-	void Trapezoids::InitTriangle(Vertex p1, Vertex p2, Vertex p3)
+	void Trapezoids::InitTriangle(Vertex &p1, Vertex &p2, Vertex &p3)
 	{
 		Vertex p;
 		float k, x;

@@ -73,6 +73,6 @@ namespace Render3D
 		int count;
 
 		Trapezoid& operator[](const int k);
-		void InitTriangle(const Vertex p1, const Vertex p2, const Vertex p3);
+		void InitTriangle(Vertex &p1, Vertex &p2, Vertex &p3);
 	};
 }

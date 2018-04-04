@@ -170,6 +170,8 @@ namespace Math3D
 	inline Vector<Real, Size> Normalize(const Vector<Real, Size>& vec)
 	{
 		Real fLength = LengthSquared(vec);
+		if (fLength - 0.0f < 0.000001f)
+			return vec;
 		Real fInvScalar = ((Real)1.0) / ((Real)sqrt((double)fLength));
 		return vec * fInvScalar;
 	}
@@ -338,59 +340,47 @@ namespace Math3D
 	template<typename Real>
 	Matrix<Real> MatrixInverse(const Matrix<Real>& _mat)
 	{
-		Real v0 = _mat.M31 * _mat.M42 - _mat.M32 * _mat.M41;
-		Real v1 = _mat.M31 * _mat.M43 - _mat.M33 * _mat.M41;
-		Real v2 = _mat.M31 * _mat.M44 - _mat.M34 * _mat.M41;
-		Real v3 = _mat.M32 * _mat.M43 - _mat.M33 * _mat.M42;
-		Real v4 = _mat.M32 * _mat.M44 - _mat.M34 * _mat.M42;
-		Real v5 = _mat.M33 * _mat.M44 - _mat.M34 * _mat.M43;
+		Matrix<Real> tmp = _mat;
+		Real t[3][6];
+		int i, j, k;
+		Real f;
 
-		Real i11 = (v5 * _mat.M22 - v4 * _mat.M23 + v3 * _mat.M24);
-		Real i21 = -(v5 * _mat.M21 - v2 * _mat.M23 + v1 * _mat.M24);
-		Real i31 = (v4 * _mat.M21 - v2 * _mat.M22 + v0 * _mat.M24);
-		Real i41 = -(v3 * _mat.M21 - v1 * _mat.M22 + v0 * _mat.M23);
+		for (i = 0; i < 3; i++)
+			for (j = 0; j < 6; j++) 
+			{
+				if (j < 3)
+					t[i][j] = tmp.Elements[j + i * 4];
+				else if (j == i + 3)
+					t[i][j] = 1;
+				else
+					t[i][j] = 0;
+			}
 
-		Real invDet = 1.0f / (i11 * _mat.M11 + i21 * _mat.M12 + i31 * _mat.M13 + i41 * _mat.M14);
+		for (i = 0; i < 3; i++) 
+		{
+			f = t[i][i];
+			for (j = 0; j < 6; j++)
+				t[i][j] /= f;
+			for (j = 0; j < 3; j++)
+			{
+				if (j != i)
+				{
+					f = t[j][i];
+					for (k = 0; k < 6; k++)
+						t[j][k] = t[j][k] - t[i][k] * f;
+				}
+			}
+		}
 
-		i11 *= invDet;
-		i21 *= invDet;
-		i31 *= invDet;
-		i41 *= invDet;
+		for (i = 0; i < 3; i++)
+			for (j = 3; j < 6; j++)
+				tmp.Elements[i * 4 + j-3] = t[i][j];
 
-		Real i12 = -(v5 * _mat.M12 - v4 * _mat.M13 + v3 * _mat.M14) * invDet;
-		Real i22 = (v5 * _mat.M11 - v2 * _mat.M13 + v1 * _mat.M14) * invDet;
-		Real i32 = -(v4 * _mat.M11 - v2 * _mat.M12 + v0 * _mat.M14) * invDet;
-		Real i42 = (v3 * _mat.M11 - v1 * _mat.M12 + v0 * _mat.M13) * invDet;
+		tmp.M41 = -tmp.M41;
+		tmp.M42 = -tmp.M42;
+		tmp.M43 = -tmp.M43;
 
-		v0 = _mat.M21 * _mat.M42 - _mat.M22 * _mat.M41;
-		v1 = _mat.M21 * _mat.M43 - _mat.M23 * _mat.M41;
-		v2 = _mat.M21 * _mat.M44 - _mat.M24 * _mat.M41;
-		v3 = _mat.M22 * _mat.M43 - _mat.M23 * _mat.M42;
-		v4 = _mat.M22 * _mat.M44 - _mat.M24 * _mat.M42;
-		v5 = _mat.M23 * _mat.M44 - _mat.M24 * _mat.M43;
-
-		Real i13 = (v5 * _mat.M12 - v4 * _mat.M13 + v3 * _mat.M14) * invDet;
-		Real i23 = -(v5 * _mat.M11 - v2 * _mat.M13 + v1 * _mat.M14) * invDet;
-		Real i33 = (v4 * _mat.M11 - v2 * _mat.M12 + v0 * _mat.M14) * invDet;
-		Real i43 = -(v3 * _mat.M11 - v1 * _mat.M12 + v0 * _mat.M13) * invDet;
-
-		v0 = _mat.M32 * _mat.M21 - _mat.M31 * _mat.M22;
-		v1 = _mat.M33 * _mat.M21 - _mat.M31 * _mat.M23;
-		v2 = _mat.M34 * _mat.M21 - _mat.M31 * _mat.M24;
-		v3 = _mat.M33 * _mat.M22 - _mat.M32 * _mat.M23;
-		v4 = _mat.M34 * _mat.M22 - _mat.M32 * _mat.M24;
-		v5 = _mat.M34 * _mat.M23 - _mat.M33 * _mat.M24;
-
-		Real i14 = -(v5 * _mat.M12 - v4 * _mat.M13 + v3 * _mat.M14) * invDet;
-		Real i24 = (v5 * _mat.M11 - v2 * _mat.M13 + v1 * _mat.M14) * invDet;
-		Real i34 = -(v4 * _mat.M11 - v2 * _mat.M12 + v0 * _mat.M14) * invDet;
-		Real i44 = (v3 * _mat.M11 - v1 * _mat.M12 + v0 * _mat.M13) * invDet;
-
-		return Matrix<Real>(
-			i11, i12, i13, i14,
-			i21, i22, i23, i24,
-			i31, i32, i33, i34,
-			i41, i42, i43, i44);
+		return tmp;
 	}
 
 	template<typename Real>
