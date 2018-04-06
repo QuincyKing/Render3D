@@ -24,13 +24,13 @@ namespace Base3D
 	{
 		Math3D::Vector4 right, at, up, front = this->front;
 		right = Cross(worldup, front);
-		Normalize(right);
+		right = Normalize(right);
 		up = Cross(front, right);
-		Normalize(up);
+		up = Normalize(up);
 		at = position + front;
 
 		MatrixSetLookat(viewMatrix, position, at, up);
-		Normalize(front);
+		front = Normalize(front);
 		MatrixSetAxis(viewMatrixR, right, up, front, position);
 	}
 }

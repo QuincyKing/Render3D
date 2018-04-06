@@ -175,17 +175,17 @@ namespace Render3D
 		Base3D::Material material = this->material;
 		Math3D::Vector4 viewdir, viewPos = camera.position;
 		viewdir = viewPos - vf.pos;
-		Normalize(viewdir);
+		viewdir = Normalize(viewdir);
 		Base3D::Texcoord tex = vf.texcoord;
 		Math3D::Vector4 normal = vf.normal;
 
 		Math3D::Vector4 lightDir = dirLight.direction;
 		VectorInverse(lightDir);
-		Normalize(lightDir);
+		lightDir = Normalize(lightDir);
 
 		float diff = fmaxf(Dot(normal, lightDir), 0.0f);
 		lightDir = dirLight.direction;
-		Normalize(lightDir);
+		lightDir = Normalize(lightDir);
 		Math3D::Vector4 vec;
 		Reflect(vec, lightDir, normal);
 		float shininess = material.shininess * (material.specularHighlightTexId == -1 ? 1 : textures[material.specularHighlightTexId].TextureValueRead(tex.u, tex.v));
@@ -257,7 +257,7 @@ namespace Render3D
 			Math3D::Vector4 lightDir = { 0.0f, 0.0f, 0.0f, 0.0f };
 			lightDir = pointlight.position - vf.pos;
 			float distance = Length(lightDir);
-			Normalize(lightDir);
+			lightDir = Normalize(lightDir);
 			float diff = fmaxf(Dot(normal, lightDir), 0.0f);
 			Math3D::Vector4 vec;
 			VectorInverse(lightDir);
@@ -379,7 +379,7 @@ namespace Render3D
 
 						V2fInterpolating(vf, vfs[0], vfs[1], vfs[2], barycenter.X(), barycenter.Y(), barycenter.Z());
 						vf.pos.W() = w;
-						Normalize(vf.normal);
+						vf.normal = Normalize(vf.normal);
 
 						FragShader(vf, color);
 
@@ -448,7 +448,7 @@ namespace Render3D
 		//Calculate face normal
 		Vector4 _normal(0.0f, 0.0f, 0.0f, 0.0f);
 		_normal = Cross(side1, side0);
-		Normalize(_normal);
+		_normal = Normalize(_normal);
 		normal = _normal;
 		//Now we use a formula to calculate the tangent.
 		float deltaV0 = v1 - v2;
@@ -458,7 +458,7 @@ namespace Render3D
 		Vector4 temp = side1;
 		temp = temp * deltaV0;
 		tangent = tangent - temp;
-		Normalize(tangent);
+		tangent = Normalize(tangent);
 		//Calculate binormal
 		float deltaU0 = u1 - u2;
 		float deltaU1 = u3 - u1;
@@ -467,7 +467,7 @@ namespace Render3D
 		temp = side1;
 		temp = temp * deltaU0;
 		binormal = binormal - temp;
-		Normalize(binormal);
+		binormal = Normalize(binormal);
 		//Now, we take the cross product of the tangents to get a vector which
 		//should point in the same direction as our normal calculated above.
 		//If it points in the opposite direction (the dot product between the normals is less than zero),
@@ -514,7 +514,7 @@ namespace Render3D
 			points[i] = vertex->pos; // 透视空间的pos
 
 			vertex->normal = vertex->normal * nm; // 法向量乘正规矩阵
-			Normalize(vertex->normal);
+			vertex->normal = Normalize(vertex->normal);
 			av->normal = vertex->normal; // 世界空间的normal
 			av->color = vertex->color;
 			av->texcoord.u = vertex->tc.u;

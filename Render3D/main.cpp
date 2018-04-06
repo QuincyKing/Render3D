@@ -470,7 +470,7 @@ int main(int argc, char * argv[])
 				float velocity = c_movementspeed * deltaTime;
 				Math3D::Vector4 temp;
 				temp = Math3D::Cross(camera.front, camera.worldup);
-				Math3D::Normalize(temp);
+				temp = Math3D::Normalize(temp);
 				temp = temp * velocity;
 				camera.position = camera.position + temp;
 				camera.dirty = true;
@@ -480,7 +480,7 @@ int main(int argc, char * argv[])
 				float velocity = c_movementspeed * deltaTime;
 				Math3D::Vector4 temp;
 				temp = Math3D::Cross(camera.front, camera.worldup);
-				Normalize(temp);
+				temp = Normalize(temp);
 				temp = temp * velocity;
 				camera.position = camera.position - temp;
 				camera.dirty = true;
