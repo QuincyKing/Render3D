@@ -2,7 +2,7 @@
 
 
 [![Author](https://img.shields.io/badge/Author-QuincyKing-brightgreen.svg)](https://github.com/QuincyKing)
-[![Version](https://img.shields.io/badge/Version-0.0.1-blue.svg)](./Render3D)
+[![Version](https://img.shields.io/badge/Version-0.0.1-blue.svg)](./)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](./LICENSE)
 
 ### Feature
