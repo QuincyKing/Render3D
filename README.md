@@ -19,6 +19,3 @@
 
 ### 绘制流水线
 ![pipeline](./img/pipeline.JPG)
-
-### 效果图
-![effect](./img/color.JPG)
